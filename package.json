@@ -1,0 +1,51 @@
+{
+  "_from": "opti-translator",
+  "_id": "opti-translator@0.1.0",
+  "_inBundle": false,
+  "_integrity": "sha512-mJw/hM7q9P4qukqYV7E5TMKFkv9gTq1LC84rbv2yqThEVBwe2FSfcK2l17I3HknLkTQLsU+lN6SG9LhaVfR/Yw==",
+  "_location": "/opti-translator",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "opti-translator",
+    "name": "opti-translator",
+    "escapedName": "opti-translator",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/opti-translator/-/opti-translator-0.1.0.tgz",
+  "_shasum": "043ea9926608a8af15a17d2d880fdb9133e587b4",
+  "_spec": "opti-translator",
+  "_where": "C:\\Optimove\\Source\\Repos\\ConditionalLanguageManager\\ConditionalLanguageManagerProj",
+  "author": "",
+  "bundleDependencies": false,
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "ejs-lint": "^0.3.0"
+  },
+  "deprecated": false,
+  "description": "Wrapping EJS for opti-conditional lang",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "mocha": "^5.0.1",
+    "should": "^13.2.1"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "license": "ISC",
+  "main": "index.js",
+  "name": "opti-translator",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.1.0"
+}
