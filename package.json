@@ -27,7 +27,8 @@
   "bundleDependencies": false,
   "dependencies": {
     "ejs": "^2.5.7",
-    "ejs-lint": "^0.3.0"
+    "ejs-lint": "^0.3.0",
+    "unescape": "^1.0.1"
   },
   "deprecated": false,
   "description": "Wrapping EJS for opti-conditional lang",
