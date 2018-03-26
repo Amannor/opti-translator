@@ -28,6 +28,7 @@
   "dependencies": {
     "ejs": "^2.5.7",
     "ejs-lint": "^0.3.0",
+    "lodash": "^4.17.5",
     "unescape": "^1.0.1"
   },
   "deprecated": false,
