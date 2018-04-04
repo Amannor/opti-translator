@@ -22,7 +22,7 @@ describe('General Translator Tests', function() {
                 expect(result[consts.OUTPUT_KEY_STR].trim()).to.equal(testObj[tstConsts.CORRECT_RESULT_KEY].trim());
 
             });
-            it(`${tstMsg} - delimiters transformation in attrs`, function()
+            it(`${tstMsg} - brackets transformation in attrs keys`, function()
             {
                 var transformedAttrs =  {};
                 Object.keys(attrs).forEach(function(attrKey)
