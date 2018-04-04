@@ -14,10 +14,25 @@ describe('General Translator Tests', function() {
     function generalTests(testObjs) {
         testObjs.forEach(function(testObj) {
             var tstMsg = testObj[tstConsts.TST_MSG_KEY];
+            var testData = testObj[tstConsts.INPUT_KEY];
+            var attrs =  testData[consts.ATTRIBUTES_KEY_STR];
             it(tstMsg, function()
             {
-                var testData = testObj[tstConsts.INPUT_KEY];
-                var result = translator.translate(testData[tstConsts.INPUT_KEY], testData[consts.ATTRIBUTES_KEY_STR]);
+                var result = translator.translate(testData[tstConsts.INPUT_KEY], attrs);
+                expect(result[consts.OUTPUT_KEY_STR].trim()).to.equal(testObj[tstConsts.CORRECT_RESULT_KEY].trim());
+
+            });
+            it(`${tstMsg} - delimiters transformation in attrs`, function()
+            {
+                var transformedAttrs =  {};
+                Object.keys(attrs).forEach(function(attrKey)
+                {
+                    var newKey = (attrKey.startsWith(consts.CUSTOM_OPEN_DELIMITER) && attrKey.endsWith(consts.CUSTOM_CLOSE_DELIMITER)) ?
+                        attrKey.replace(consts.CUSTOM_OPEN_DELIMITER, "").replace(consts.CUSTOM_CLOSE_DELIMITER, "") :
+                        `${consts.CUSTOM_OPEN_DELIMITER}${attrKey}${consts.CUSTOM_CLOSE_DELIMITER}`;
+                   transformedAttrs[newKey] = attrs[attrKey];
+                });
+                var result = translator.translate(testData[tstConsts.INPUT_KEY], transformedAttrs);
                 expect(result[consts.OUTPUT_KEY_STR].trim()).to.equal(testObj[tstConsts.CORRECT_RESULT_KEY].trim());
             });
         });
