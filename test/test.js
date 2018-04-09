@@ -125,7 +125,7 @@ describe('General Translator Tests', function() {
         addToTestCases(inputObj, `${OrdersCorrectResult1}  ${OrdersCorrectResult2}`, `should return string  (compound no else)  according to order value: ${orderVal}`);
     });
 
-    //Whitespace
+    //Whitespace #1
     var INPUT_PAGE_WHITESPACES = `
         ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}       ${LANGUAGE_KEY}\n==     'English'   ${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageEnglishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
         ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}\n${LANGUAGE_KEY}\t\t\t!=\n\n  'Italian'   ${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageSpanishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}

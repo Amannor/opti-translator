@@ -3,8 +3,8 @@
 
     function preprocessInput(inputStr)
     {
-        var ifRegex = String.raw`\[%\s*IF\s*:\s*\S+\s*\s*\S+\s*\s*\S+\s*%\]`;
-        var elseifRegex = String.raw`\[%\s*ELSEIF\s*:\s*\S+\s*\s*\S+\s*\s*\S+\s*%\]`;
+        var ifRegex = String.raw`\[%\s*IF\s*:\s*\S+\s*\S+\s*\S+\s*%\]`;
+        var elseifRegex = String.raw`\[%\s*ELSEIF\s*:\s*\S+\s*\S+\s*\S+\s*%\]`;
         var elseRegex = String.raw`\[%\s*ELSE\s*%\]`;
         var endifRegex = String.raw`\[%\s*END\s*:\s*IF\s*%\]`;
         var condRegexes = [ifRegex, elseifRegex, elseRegex, endifRegex];
