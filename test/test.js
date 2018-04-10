@@ -163,13 +163,13 @@ describe('General Translator Tests', function() {
         ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${LANGUAGE_KEY}=='English'${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageEnglishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
         ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${LANGUAGE_KEY}!='Italian'${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageSpanishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
         ${consts.CUSTOM_ELSE_BLOCK_TAG} ${sectionsPerValue.languageItalianText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
-    var possibleLanguageVals = ["Spanish", "English", "Italian"];
+    var possibleLanguageVals = ["Spanish", "englIsh", "Italian"];
 
     possibleLanguageVals.forEach(function (langVal) {
         var langsAttrs = { [LANGUAGE_KEY]: langVal };
         var inputObj = { [tstConsts.INPUT_KEY]: INPUT_PAGE_LANGUAGE, [consts.ATTRIBUTES_KEY_STR]: langsAttrs };
-        var LangsCorrectResult = langVal == "English" ? sectionsPerValue.languageEnglishText :
-            langVal != "Italian" ? sectionsPerValue.languageSpanishText :
+        var LangsCorrectResult = langVal.toUpperCase() == "English".toUpperCase() ? sectionsPerValue.languageEnglishText :
+            langVal.toUpperCase() != "Italian".toUpperCase() ? sectionsPerValue.languageSpanishText :
                 sectionsPerValue.languageItalianText;
         addToTestCases(inputObj, LangsCorrectResult, `should return string according to language value: ${langVal}`);
     });
