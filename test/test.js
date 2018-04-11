@@ -174,6 +174,15 @@ describe('General Translator Tests', function() {
         addToTestCases(inputObj, LangsCorrectResult, `should return string according to language value: ${langVal}`);
     });
 
+    //Languages - [%%] in attrs key
+    possibleLanguageVals.forEach(function (langVal) {
+        var langsAttrs = { [`${consts.CUSTOM_OPEN_DELIMITER}${LANGUAGE_KEY}${consts.CUSTOM_CLOSE_DELIMITER}`]: langVal };
+        var inputObj = { [tstConsts.INPUT_KEY]: INPUT_PAGE_LANGUAGE, [consts.ATTRIBUTES_KEY_STR]: langsAttrs };
+        var LangsCorrectResult = langVal.toUpperCase() == "English".toUpperCase() ? sectionsPerValue.languageEnglishText :
+            langVal.toUpperCase() != "Italian".toUpperCase() ? sectionsPerValue.languageSpanishText :
+                sectionsPerValue.languageItalianText;
+        addToTestCases(inputObj, LangsCorrectResult, `should return string according to language value ( ${consts.CUSTOM_OPEN_DELIMITER}${consts.CUSTOM_CLOSE_DELIMITER} in key): ${langVal}`);
+    });
 
     /*
     //favorite product
