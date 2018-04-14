@@ -140,24 +140,6 @@ describe('General Translator Tests', function() {
         addToTestCases(inputObj, LangsCorrectResult, `Whitespace test - should return string according to language value: ${langVal}`);
     });
 
-      //Whitespace #2
-    /*   ******Need to stabilize******
-      var INPUT_PAGE_WHITESPACES2 = `                                                                                                                                                                                                                     
-          ${consts.CUSTOM_OPEN_DELIMITER}         IF\t\t${consts.LOGICAL_CONDITION_DELIMITER}  ${FAV_PROD_KEY}  ${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.favProductExistenceText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}                                              
-          ${consts.CUSTOM_OPEN_DELIMITER}\n\nELSEIF             ${consts.LOGICAL_CONDITION_DELIMITER}\n${LANGUAGE_KEY}   ${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageSpanishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
-          ${consts.CUSTOM_OPEN_DELIMITER}    ELSE \n\t${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.favProductNonExistenceText} ${consts.CUSTOM_OPEN_DELIMITER} END  \t ${consts.LOGICAL_CONDITION_DELIMITER}  \nIF   ${consts.CUSTOM_CLOSE_DELIMITER}`;
-      var possibleFavProdVals = ["", "[%FAV_PROD%]", "FAV_PROD"];
-      var possibleLanguageVals = ["", "Spanish", "English"];
-      possibleLanguageVals.forEach(function (langVal){
-        possibleFavProdVals.forEach(function (prodVal) {
-              var prodAttrs = { [FAV_PROD_KEY]: prodVal,  [LANGUAGE_KEY]: langVal  };
-              var inputObj = { [tstConsts.INPUT_KEY]: INPUT_PAGE_WHITESPACES2, [consts.ATTRIBUTES_KEY_STR]: prodAttrs };
-              var FavProdCorrectResult = (prodVal == null || prodVal.trim() === '') ? sectionsPerValue.favProductNonExistenceText :
-                                         (langVal == null || langVal.trim() === '') ? sectionsPerValue.languageSpanishText : sectionsPerValue.favProductExistenceText;
-              addToTestCases(inputObj, FavProdCorrectResult, `Whitespace test 2 - should return string according to fav prod: ${prodVal} lang: ${langVal}`);
-        });
-      });
-*/
     //Languages
     var INPUT_PAGE_LANGUAGE = `
         ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${LANGUAGE_KEY}=='English'${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageEnglishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
@@ -175,6 +157,7 @@ describe('General Translator Tests', function() {
     });
 
     //Languages - [%%] in attrs key
+    var possibleLanguageVals = ["Spanish", "englIsh", "Italian"];
     possibleLanguageVals.forEach(function (langVal) {
         var langsAttrs = { [`${consts.CUSTOM_OPEN_DELIMITER}${LANGUAGE_KEY}${consts.CUSTOM_CLOSE_DELIMITER}`]: langVal };
         var inputObj = { [tstConsts.INPUT_KEY]: INPUT_PAGE_LANGUAGE, [consts.ATTRIBUTES_KEY_STR]: langsAttrs };
@@ -184,7 +167,43 @@ describe('General Translator Tests', function() {
         addToTestCases(inputObj, LangsCorrectResult, `should return string according to language value ( ${consts.CUSTOM_OPEN_DELIMITER}${consts.CUSTOM_CLOSE_DELIMITER} in key): ${langVal}`);
     });
 
+
+
     /*
+    //Languages - [%%] in input string
+      // ******Need to stabilize******
+    var possibleLanguageVals = ["Spanish", "englIsh", "Italian"];
+    var INPUT_PAGE_LANGUAGE_BRACKETS_IN_INPUT = `
+        ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${consts.CUSTOM_OPEN_DELIMITER}${LANGUAGE_KEY}${consts.CUSTOM_CLOSE_DELIMITER}=='English'${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageEnglishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+        ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${LANGUAGE_KEY}!='Italian'${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageSpanishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+        ${consts.CUSTOM_ELSE_BLOCK_TAG} ${sectionsPerValue.languageItalianText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+
+    possibleLanguageVals.forEach(function (langVal) {
+        var langsAttrs = { [`${consts.CUSTOM_OPEN_DELIMITER}${LANGUAGE_KEY}${consts.CUSTOM_CLOSE_DELIMITER}`]: langVal };
+        var inputObj = { [tstConsts.INPUT_KEY]: INPUT_PAGE_LANGUAGE_BRACKETS_IN_INPUT, [consts.ATTRIBUTES_KEY_STR]: langsAttrs };
+        var LangsCorrectResult = langVal.toUpperCase() == "English".toUpperCase() ? sectionsPerValue.languageEnglishText :
+            langVal.toUpperCase() != "Italian".toUpperCase() ? sectionsPerValue.languageSpanishText :
+                sectionsPerValue.languageItalianText;
+        addToTestCases(inputObj, LangsCorrectResult, `should return string according to language value ( ${consts.CUSTOM_OPEN_DELIMITER}${consts.CUSTOM_CLOSE_DELIMITER} in input str): ${langVal}`);
+    });
+
+      //Whitespace #2
+       //******Need to stabilize******
+      var INPUT_PAGE_WHITESPACES2 = `
+          ${consts.CUSTOM_OPEN_DELIMITER}         IF\t\t${consts.LOGICAL_CONDITION_DELIMITER}  ${FAV_PROD_KEY}  ${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.favProductExistenceText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+          ${consts.CUSTOM_OPEN_DELIMITER}\n\nELSEIF             ${consts.LOGICAL_CONDITION_DELIMITER}\n${LANGUAGE_KEY}   ${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageSpanishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+          ${consts.CUSTOM_OPEN_DELIMITER}    ELSE \n\t${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.favProductNonExistenceText} ${consts.CUSTOM_OPEN_DELIMITER} END  \t ${consts.LOGICAL_CONDITION_DELIMITER}  \nIF   ${consts.CUSTOM_CLOSE_DELIMITER}`;
+      var possibleFavProdVals = ["", "[%FAV_PROD%]", "FAV_PROD"];
+      var possibleLanguageVals = ["", "Spanish", "English"];
+      possibleLanguageVals.forEach(function (langVal){
+        possibleFavProdVals.forEach(function (prodVal) {
+              var prodAttrs = { [FAV_PROD_KEY]: prodVal,  [LANGUAGE_KEY]: langVal  };
+              var inputObj = { [tstConsts.INPUT_KEY]: INPUT_PAGE_WHITESPACES2, [consts.ATTRIBUTES_KEY_STR]: prodAttrs };
+              var FavProdCorrectResult = (prodVal == null || prodVal.trim() === '') ? sectionsPerValue.favProductNonExistenceText :
+                                         (langVal == null || langVal.trim() === '') ? sectionsPerValue.languageSpanishText : sectionsPerValue.favProductExistenceText;
+              addToTestCases(inputObj, FavProdCorrectResult, `Whitespace test 2 - should return string according to fav prod: ${prodVal} lang: ${langVal}`);
+        });
+      });
     //favorite product
     var INPUT_PAGE_STATE = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX} ${FAV_PROD_KEY} ${consts.CUSTOM_CLOSE_DELIMITER}
                               ${sectionsPerValue.favProductExistenceText}
