@@ -32,7 +32,7 @@ describe('General Validation Tests', function() {
             {
                 var result = translator.translate(testInputStr, null, true);
                 var actualValidationResults = result[consts.VALIDATE_OUTPUT_KEY_STR];
-                expect(_.differenceWith(expectedValidationResults, actualValidationResults, areValidationResultsEqual));
+                expect(_.differenceWith(expectedValidationResults, actualValidationResults, areValidationResultsEqual).length).to.equal(0);
             });
         });
     }
@@ -42,7 +42,7 @@ describe('General Validation Tests', function() {
          var tstObj = {};
          tstObj[tstConsts.TST_MSG_KEY] = msgToAdd;
          tstObj[tstConsts.INPUT_KEY] = inputToAdd;
-         tstObj[tstConsts.VALIDATE_OUTPUT_KEY_STR] = resultsToAdd;
+         tstObj[consts.VALIDATE_OUTPUT_KEY_STR] = resultsToAdd;
          tstObjs.push(tstObj);
      }
 

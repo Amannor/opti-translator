@@ -168,7 +168,21 @@ describe('General Translator Tests', function() {
     });
 
 
-
+    //Languages - duplicate attrs key - (with & without [%%])
+    var INPUT_PAGE_LANGUAGE = `
+        ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${LANGUAGE_KEY}=='English'${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageEnglishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+        ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${LANGUAGE_KEY}!='Italian'${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageSpanishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+        ${consts.CUSTOM_ELSE_BLOCK_TAG} ${sectionsPerValue.languageItalianText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+    var possibleLanguageVals = ["Spanish", "englIsh", "Italian"];
+    possibleLanguageVals.forEach(function (langVal) {
+        var langsAttrs = { [`${consts.CUSTOM_OPEN_DELIMITER}${LANGUAGE_KEY}${consts.CUSTOM_CLOSE_DELIMITER}`]: langVal,
+                           [`${LANGUAGE_KEY}`]: langVal};
+        var inputObj = { [tstConsts.INPUT_KEY]: INPUT_PAGE_LANGUAGE, [consts.ATTRIBUTES_KEY_STR]: langsAttrs };
+        var LangsCorrectResult = langVal.toUpperCase() == "English".toUpperCase() ? sectionsPerValue.languageEnglishText :
+            langVal.toUpperCase() != "Italian".toUpperCase() ? sectionsPerValue.languageSpanishText :
+                sectionsPerValue.languageItalianText;
+        addToTestCases(inputObj, LangsCorrectResult, `should return string according to language value: ${langVal} (duplicate attrs key - with & without ${consts.CUSTOM_OPEN_DELIMITER} ${consts.CUSTOM_CLOSE_DELIMITER})`);
+    });
     /*
     //Languages - [%%] in input string
       // ******Need to stabilize******
