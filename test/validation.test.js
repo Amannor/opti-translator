@@ -47,7 +47,6 @@ describe('General Validation Tests', function() {
      }
 
     addToValidationTests('should return empty validation list', "", []);
-    executeGeneralValidationTests();
 /*    function validInputTests(inputStr) {
         it('should return empty validation list', function () {
             var result = translator.translate(inputStr);
@@ -60,13 +59,31 @@ describe('General Validation Tests', function() {
 
         });
     }*/
-   /*
-    var ORDER_KEY = "ORDER_VAL";
+
+    const ORDER_KEY = "ORDER_VALUE";
+    const LANGUAGE_KEY = "LANGUAGE";
+    const FAV_PROD_KEY = "FAVORITE_PRODUCT";
+    const sectionsPerValue = {
+        orderGT200Text: "Order greater than 200",
+        orderLTOE200Text: "Order less than or equal to 200",
+        orderGT100LT200Text: "Order greater than 100 and less than 200",
+        orderLT100Text: "Order less than 100",
+        orderNNText: "Order non-negative",
+        orderNText: "Order negative",
+        languageEnglishText: "Content for English",
+        languageNotEnglishText: "Content not for English",
+        languageSpanishText: "Content for Spanish",
+        languageNotSpanishText: "Content not for Spanish",
+        languageItalianText: "Content for Italian",
+        favProductExistenceText: `Your favorite product: ${consts.CUSTOM_OPEN_DELIMITER}${FAV_PROD_KEY}${consts.CUSTOM_CLOSE_DELIMITER}`,
+        favProductNonExistenceText: `No favorite product`
+    };
+
     var inputStr = `
-        ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}>200${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.orderGT200Text} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
-    it('should return empty validation list', function() {
-       var result = translator.translate("");
-          expect(result[consts.VALIDATE_OUTPUT_KEY_STR].length).to.equal(0);
-    });
-    */
+        ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}>200${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.orderGT200Text}`;
+    var res = new ValidationResult(consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX,
+        `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}>200${consts.CUSTOM_CLOSE_DELIMITER}`, consts.VALIDATION_BLOCK_MSG);
+    addToValidationTests(`Should return a ${res.errorMsg} - missing ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`, inputStr, [res]);
+
+    executeGeneralValidationTests();
 });
