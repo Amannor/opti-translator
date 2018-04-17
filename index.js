@@ -22,9 +22,9 @@
         return preprocessedAttrs;
     }
 
-    translator.translate = function (dataToTranslate, attrsObj = null, shouldValidate = false, shouldReturnGroupByMapping = false) {
+    translator.translate = function (dataToTranslate, attrsObj = null, shouldValidate = false, maxClausesPerBlock=null, maxCondBlocks=null, shouldReturnGroupByMapping = false) {
         var cleanedInputData = preprocessInputStr(dataToTranslate);
         //var cleanedAttrs = preprocessAttrs(attrsObj);
-        return ejsTranslator.translateToEjs(cleanedInputData, attrsObj, shouldReturnGroupByMapping, shouldValidate);
+        return ejsTranslator.translateToEjs(cleanedInputData, attrsObj, shouldReturnGroupByMapping, shouldValidate, maxClausesPerBlock, maxCondBlocks);
     };
 })(module.exports);
