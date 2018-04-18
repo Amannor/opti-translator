@@ -26,15 +26,17 @@
   "author": "",
   "bundleDependencies": false,
   "dependencies": {
-    "ejs": "^2.5.7",
-    "ejs-lint": "^0.3.0"
+    "ejs": "^2.5.8",
+    "ejs-lint": "^0.3.0",
+    "lodash": "^4.17.5",
+    "unescape": "^1.0.1"
   },
   "deprecated": false,
   "description": "Wrapping EJS for opti-conditional lang",
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
-    "mocha": "^5.0.1",
+    "mocha": "^5.1.0",
     "should": "^13.2.1"
   },
   "directories": {
@@ -47,5 +49,5 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "0.1.0"
+  "version": "1.3.2"
 }
