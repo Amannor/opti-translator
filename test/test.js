@@ -4,6 +4,7 @@ var expect = require('chai').expect;
 var translator = require('../index');
 const consts = require('../lib/consts.js');
 const tstConsts = require('./testConsts.js');
+const tagPrefixes = require('../lib/tagPrefixes.js');
 
 describe('General Translator Tests', function() {
     it('should return empty string', function() {
@@ -183,13 +184,34 @@ describe('General Translator Tests', function() {
                 sectionsPerValue.languageItalianText;
         addToTestCases(inputObj, LangsCorrectResult, `should return string according to language value: ${langVal} (duplicate attrs key - with & without ${consts.CUSTOM_OPEN_DELIMITER} ${consts.CUSTOM_CLOSE_DELIMITER})`);
     });
+
+    //Languages - tag prefixes
+    var possibleLanguageVals = ["Spanish", "englIsh", "Italian"];
+    var possiblePrefixes = tagPrefixes.GetAllPrefixes();
+    possiblePrefixes.forEach(function(tagPrefix) {
+        var prefixedLangKey = `${tagPrefix}${consts.LOGICAL_CONDITION_DELIMITER}${LANGUAGE_KEY}`;
+        var prefixedInputPageLang = `
+                ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${prefixedLangKey}=='English'${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageEnglishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+                ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${prefixedLangKey}!='Italian'${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageSpanishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+                ${consts.CUSTOM_ELSE_BLOCK_TAG} ${sectionsPerValue.languageItalianText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+
+        possibleLanguageVals.forEach(function (langVal) {
+            var langsAttrs = {[`${consts.CUSTOM_OPEN_DELIMITER}${prefixedLangKey}${consts.CUSTOM_CLOSE_DELIMITER}`]: langVal};
+            var inputObj = {[tstConsts.INPUT_KEY]: prefixedInputPageLang, [consts.ATTRIBUTES_KEY_STR]: langsAttrs};
+            var LangsCorrectResult = langVal.toUpperCase() == "English".toUpperCase() ? sectionsPerValue.languageEnglishText :
+                langVal.toUpperCase() != "Italian".toUpperCase() ? sectionsPerValue.languageSpanishText :
+                    sectionsPerValue.languageItalianText;
+            addToTestCases(inputObj, LangsCorrectResult, `Tag prefixes test. Prefix: ${tagPrefix} langVal: ${langVal}`);
+        });
+    });
     /*
     //Languages - [%%] in input string
       // ******Need to stabilize******
     var possibleLanguageVals = ["Spanish", "englIsh", "Italian"];
     var INPUT_PAGE_LANGUAGE_BRACKETS_IN_INPUT = `
         ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${consts.CUSTOM_OPEN_DELIMITER}${LANGUAGE_KEY}${consts.CUSTOM_CLOSE_DELIMITER}=='English'${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageEnglishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
-        ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${LANGUAGE_KEY}!='Italian'${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageSpanishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+
+        {consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${LANGUAGE_KEY}!='Italian'${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.languageSpanishText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
         ${consts.CUSTOM_ELSE_BLOCK_TAG} ${sectionsPerValue.languageItalianText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
 
     possibleLanguageVals.forEach(function (langVal) {
