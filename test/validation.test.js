@@ -1,12 +1,12 @@
 'use strict';
 
-//import ValidationResult from "../lib/validationResult";
 var expect = require('chai').expect;
 const decode = require('unescape');
 var _ = require('lodash');
 var translator = require('../index');
 const consts = require('../lib/consts.js');
 const tstConsts = require('./testConsts.js');
+const tagPrefixes = require('../lib/tagPrefixes.js');
 var ValidationResult = require("../lib/validationResult.js");
 
 describe('General Validation Tests', function() {
@@ -104,6 +104,21 @@ describe('General Validation Tests', function() {
     var res = new ValidationResult(maxAllowedCondBlocksNum, consts.VALIDATION_START_INDEX,
         `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}>200${consts.CUSTOM_CLOSE_DELIMITER}`, validationMsg);
     addToValidationTests(`Should return: ${res.errorMsg}`, inputStr, [res], 999, maxAllowedCondBlocksNum);
+
+
+       // Compound valid tag prefixes
+      tagPrefixes.PersonalizationTypesPrefixes.forEach(function(prefix){
+
+           var curKeys = [`${prefix}${consts.LOGICAL_CONDITION_DELIMITER}A`,
+                          `${prefix}${consts.LOGICAL_CONDITION_DELIMITER}A${consts.LOGICAL_CONDITION_DELIMITER}B`,
+                          `${prefix}${consts.LOGICAL_CONDITION_DELIMITER}A${consts.LOGICAL_CONDITION_DELIMITER}B${consts.LOGICAL_CONDITION_DELIMITER}C`
+           ];
+           curKeys.forEach(function(curKey){
+                var inputStr = `                                                                                                                                                        
+                   ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curKey}>200${consts.CUSTOM_CLOSE_DELIMITER} body ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+                addToValidationTests(`Valid prefixes checked: ${curKey}`, inputStr, []);
+           });
+       });
 
     executeGeneralValidationTests();
 });

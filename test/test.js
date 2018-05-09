@@ -204,6 +204,22 @@ describe('General Translator Tests', function() {
             addToTestCases(inputObj, LangsCorrectResult, `Tag prefixes test. Prefix: ${tagPrefix} langVal: ${langVal}`);
         });
     });
+
+    // Compound valid tag prefixes
+    tagPrefixes.PersonalizationTypesPrefixes.forEach(function(prefix){
+
+        var curKeys = [`${prefix}${consts.LOGICAL_CONDITION_DELIMITER}A`,
+            `${prefix}${consts.LOGICAL_CONDITION_DELIMITER}A${consts.LOGICAL_CONDITION_DELIMITER}B`,
+            `${prefix}${consts.LOGICAL_CONDITION_DELIMITER}A${consts.LOGICAL_CONDITION_DELIMITER}B${consts.LOGICAL_CONDITION_DELIMITER}C`
+        ];
+        curKeys.forEach(function(curKey){
+            var inputStr = `                                                                                                                                                        
+                   ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curKey}>200${consts.CUSTOM_CLOSE_DELIMITER} body ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+            var inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: {"placeholderKey": "placeholderVal"} };
+            addToTestCases(inputObj, "", `should return empty result, checking that valid prefix (${curKey}) doesn't throw`);
+        });
+    });
+
     /*
     //Languages - [%%] in input string
       // ******Need to stabilize******
