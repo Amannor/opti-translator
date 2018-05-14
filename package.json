@@ -43,7 +43,7 @@
     "lib": "lib",
     "test": "test"
   },
-  "license": "ISC",
+  "license": "Apache-2.0",
   "main": "index.js",
   "name": "opti-translator",
   "scripts": {
