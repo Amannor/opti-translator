@@ -13,15 +13,10 @@ describe('General Validation Tests', function () {
 
     function areValidationResultsEqual(lhs, rhs) {
         if (rhs == null) {
-            if (lhs == null) {
-                return true;
-            }
-            else {
-                return lhs.isValidationEqual(rhs);
-            }
+            return lhs == null;
         }
         else if (lhs == null) {
-            return rhs.isValidationEqual(lhs);
+            return false;
         }
         else {
             return lhs.isValidationEqual(rhs);
