@@ -127,7 +127,7 @@ describe('General Validation Tests', function () {
                ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}${op}200${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
         addToValidationTests(`Legal operator: ${op}`, inputStr, []);
     });
-    let illegalOps = ["=", "=!", "=!!", "=!!!"];
+    let illegalOps = ["=", "=!", "=!!", "=!!!", "!", "!!"];
     illegalOps.forEach(function (op) {
         let inputStr = `
                ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}${op}200${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
