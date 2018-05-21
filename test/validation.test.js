@@ -122,41 +122,22 @@ describe('General Validation Tests', function () {
     });
 
     //Operators testing (both legal & illegal)
-    const G = require('generatorics');
-//    var atomicChars = ['=', '!', ';', '<', '>', '^', '/', '\\', '?', '+', '-', '_', '~', '.', ',', '|', '&', '*', '(', ')', '[', ']', '{', '}', '#', '@', '|', '%', '@'];
-    var atomicCharsSet = new Set();
     consts.LEGAL_OPERATORS.forEach(function (op) {
-        op.split("").forEach(function (opChar) {
-            atomicCharsSet.add(opChar);
-        });
+        let inputStr = `
+               ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}${op}200${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+        addToValidationTests(`Legal operator: ${op}`, inputStr, []);
     });
-    var atomicChars = Array.from(atomicCharsSet);
-    var maxOperatorLen = 4;
-
-    for (var operatorLen = 1; operatorLen <= maxOperatorLen; operatorLen++) {
-        for (var permutation of G.baseN(atomicChars, operatorLen)) {
-            var operator = permutation.join("");
-            if (operator.split("!").join("") == "") {
-                continue;
-            }
-            var inputStr = `
-               ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}${operator}200${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
-
-            if (consts.LEGAL_OPERATORS.indexOf(operator) >= 0) {
-                addToValidationTests(`Legal operator: ${operator}`, inputStr, []);
-            }
-            /*else {
-                           var legalOpsInOperator = consts.LEGAL_OPERATORS.filter(function (legalOp) {
-                               var operatorIndex = operator.indexOf(legalOp);
-                               return operatorIndex > 0;
-                           });
-                           var res = new ValidationResult(consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX,
-                               inputStr.substring(0, inputStr.indexOf(consts.CUSTOM_CLOSE_DELIMITER) + consts.CUSTOM_CLOSE_DELIMITER.length), consts.VALIDATION_ILLEGAL_OP_MSG);
-
-                           addToValidationTests(`Illegal operator: ${operator}`, inputStr, [res]);
-                       }*/
-        }
-    }
+    let illegalOps = ["=", "=!", "=!!", "=!!!"];
+    illegalOps.forEach(function (op) {
+        let inputStr = `
+               ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}${op}200${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+        let invalidCond = inputStr.substring(inputStr.indexOf(consts.CUSTOM_OPENING_IF_BLOCK_PREFIX) + consts.CUSTOM_OPENING_IF_BLOCK_PREFIX.length,
+            inputStr.indexOf(consts.CUSTOM_CLOSE_DELIMITER) + consts.CUSTOM_CLOSE_DELIMITER.length);
+        invalidCond = invalidCond.replace(consts.CUSTOM_CLOSE_DELIMITER, "").replace(consts.CUSTOM_OPEN_DELIMITER, "").trim();
+        var res = new ValidationResult(consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX,
+            invalidCond, consts.VALIDATION_COND_MSG);
+        addToValidationTests(`Illegal operator: ${op}`, inputStr, [res]);
+    });
 
     /*Todo:
         1) Generate all permutations of atomicChars (including repeat of char) up to length 4
