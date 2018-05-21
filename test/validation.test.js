@@ -139,13 +139,5 @@ describe('General Validation Tests', function () {
         addToValidationTests(`Illegal operator: ${op}`, inputStr, [res]);
     });
 
-    /*Todo:
-        1) Generate all permutations of atomicChars (including repeat of char) up to length 4
-        2) Iterate over the list from the previous paragraph, excluding consts.LEGAL_OPERATORS, and test the validationResults returned
-            *Consider using the following npm packages: generatorics, ombination-generator, js-combinatorics
-            * Search 'keywords:permutations' in the npmjs.com website
-    */
-
-
     executeGeneralValidationTests();
 });
