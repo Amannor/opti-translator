@@ -139,5 +139,17 @@ describe('General Validation Tests', function () {
         addToValidationTests(`Illegal operator: ${op}`, inputStr, [res]);
     });
 
+    //Invalid attribute
+    let invalidAttr = "ddddddddddddd";
+    consts.LEGAL_OPERATORS.forEach(function (op) {
+        let invalidCond = `${invalidAttr}${consts.OP_EQ}'Italian'`;
+        var inputStr = `
+        ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${invalidCond}${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+        ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${LANGUAGE_KEY}${consts.OP_EQ}'English'${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+        var res = new ValidationResult(consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX,
+            invalidCond, consts.VALIDATION_COND_MSG);
+        addToValidationTests(`Invalid attribute (legal operator: ${op})`, inputStr, [res]);
+    });
+
     executeGeneralValidationTests();
 });
