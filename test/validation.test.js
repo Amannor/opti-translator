@@ -23,6 +23,19 @@ describe('General Validation Tests', function () {
         }
     }
 
+    const ORDER_KEY = "ORDER_VALUE";
+    const LANGUAGE_KEY = "LANGUAGE";
+    const FAV_PROD_KEY = "FAVORITE_PRODUCT";
+    const ALL_ATTRS_KEYS = [ORDER_KEY, LANGUAGE_KEY, FAV_PROD_KEY];
+
+    function generateEmptyLegalAttrs(defaultVal = "") {
+        let attrsObj = {};
+        ALL_ATTRS_KEYS.forEach(function (attrKey) {
+            attrsObj[attrKey] = defaultVal;
+        });
+        return attrsObj;
+    }
+
     var tstObjs = [];
 
     function executeGeneralValidationTests() {
@@ -32,9 +45,11 @@ describe('General Validation Tests', function () {
             var expectedValidationResults = testObj[consts.VALIDATE_OUTPUT_KEY_STR];
             var maxClausesPerBlock = testObj[consts.VALIDATION_INPUT_KEY_MAX_CONDS_PER_BLOCK];
             var maxBlocksPerTemplate = testObj[consts.VALIDATION_INPUT_KEY_MAX_BLOCKS_PER_TEMPLATE];
+            var attrs = testObj[consts.ATTRIBUTES_KEY_STR];
+
 
             it(tstMsg, function () {
-                var result = translator.translate(testInputStr, null, true, maxClausesPerBlock, maxBlocksPerTemplate);
+                var result = translator.translate(testInputStr, attrs, true, maxClausesPerBlock, maxBlocksPerTemplate);
                 var actualValidationResults = result[consts.VALIDATE_OUTPUT_KEY_STR];
                 expect(_.differenceWith(expectedValidationResults, actualValidationResults, areValidationResultsEqual).length).to.equal(0);
                 expect(_.differenceWith(actualValidationResults, expectedValidationResults, areValidationResultsEqual).length).to.equal(0);
@@ -42,34 +57,20 @@ describe('General Validation Tests', function () {
         });
     }
 
-    function addToValidationTests(msgToAdd, inputToAdd, resultsToAdd, maxClausesPerBlock = null, maxBlocksPerTemplate = null) {
+    function addToValidationTests(msgToAdd, inputToAdd, resultsToAdd, attrsObj = generateEmptyLegalAttrs(), maxClausesPerBlock = null, maxBlocksPerTemplate = null) {
         var tstObj = {};
         tstObj[tstConsts.TST_MSG_KEY] = msgToAdd;
         tstObj[tstConsts.INPUT_KEY] = inputToAdd;
         tstObj[consts.VALIDATE_OUTPUT_KEY_STR] = resultsToAdd;
         tstObj[consts.VALIDATION_INPUT_KEY_MAX_CONDS_PER_BLOCK] = maxClausesPerBlock;
         tstObj[consts.VALIDATION_INPUT_KEY_MAX_BLOCKS_PER_TEMPLATE] = maxBlocksPerTemplate;
+        tstObj[consts.ATTRIBUTES_KEY_STR] = attrsObj;
 
         tstObjs.push(tstObj);
     }
 
     addToValidationTests('should return empty validation list', "", []);
-    /*    function validInputTests(inputStr) {
-            it('should return empty validation list', function () {
-                var result = translator.translate(inputStr);
-                expect(result[consts.VALIDATE_OUTPUT_KEY_STR].length).to.equal(0);
-                result = translator.translate("", null, false);
-                expect(result[consts.VALIDATE_OUTPUT_KEY_STR].length).to.equal(0);
-    //        result = translator.translate("", null, true);
-                //      expect(result[consts.VALIDATE_OUTPUT_KEY_STR].length).to.equal(0);
 
-
-            });
-        }*/
-
-    const ORDER_KEY = "ORDER_VALUE";
-    const LANGUAGE_KEY = "LANGUAGE";
-    const FAV_PROD_KEY = "FAVORITE_PRODUCT";
     const sectionsPerValue = {
         orderGT200Text: "Order greater than 200",
         orderLTOE200Text: "Order less than or equal to 200",
@@ -103,7 +104,7 @@ describe('General Validation Tests', function () {
     var validationMsg = `${consts.VALIDATION_BLOCK_MSG}: block #${maxAllowedCondBlocksNum + 1} exceeds max number of allowed blocks: ${maxAllowedCondBlocksNum}`;
     var res = new ValidationResult(maxAllowedCondBlocksNum, consts.VALIDATION_START_INDEX,
         `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}>200${consts.CUSTOM_CLOSE_DELIMITER}`, validationMsg);
-    addToValidationTests(`Should return: ${res.errorMsg}`, inputStr, [res], 999, maxAllowedCondBlocksNum);
+    addToValidationTests(`Should return: ${res.errorMsg}`, inputStr, [res], generateEmptyLegalAttrs(), 999, maxAllowedCondBlocksNum);
 
 
     // Compound valid tag prefixes
@@ -116,7 +117,7 @@ describe('General Validation Tests', function () {
         curKeys.forEach(function (curKey) {
             var inputStr = `                                                                                                                                                        
                    ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curKey}>200${consts.CUSTOM_CLOSE_DELIMITER} body ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
-            addToValidationTests(`Valid prefixes checked: ${curKey}`, inputStr, []);
+            addToValidationTests(`Valid prefixes checked: ${curKey}`, inputStr, [], {[curKey]: ""});
         });
     });
 
@@ -139,20 +140,21 @@ describe('General Validation Tests', function () {
                 continue;
             }
             var inputStr = `
-               ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}ATTR${operator}200${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+               ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}${operator}200${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
 
             if (consts.LEGAL_OPERATORS.indexOf(operator) >= 0) {
                 addToValidationTests(`Legal operator: ${operator}`, inputStr, []);
-            } /*else {
-                var legalOpsInOperator = consts.LEGAL_OPERATORS.filter(function (legalOp) {
-                    var operatorIndex = operator.indexOf(legalOp);
-                    return operatorIndex > 0;
-                });
-                var res = new ValidationResult(consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX,
-                    inputStr.substring(0, inputStr.indexOf(consts.CUSTOM_CLOSE_DELIMITER) + consts.CUSTOM_CLOSE_DELIMITER.length), consts.VALIDATION_ILLEGAL_OP_MSG);
+            }
+            /*else {
+                           var legalOpsInOperator = consts.LEGAL_OPERATORS.filter(function (legalOp) {
+                               var operatorIndex = operator.indexOf(legalOp);
+                               return operatorIndex > 0;
+                           });
+                           var res = new ValidationResult(consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX,
+                               inputStr.substring(0, inputStr.indexOf(consts.CUSTOM_CLOSE_DELIMITER) + consts.CUSTOM_CLOSE_DELIMITER.length), consts.VALIDATION_ILLEGAL_OP_MSG);
 
-                addToValidationTests(`Illegal operator: ${operator}`, inputStr, [res]);
-            }*/
+                           addToValidationTests(`Illegal operator: ${operator}`, inputStr, [res]);
+                       }*/
         }
     }
 

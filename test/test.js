@@ -12,11 +12,19 @@ describe('General Translator Tests', function() {
         expect(result[consts.OUTPUT_KEY_STR]).to.equal('');
     });
 
+    const ORDER_KEY = "ORDER_VALUE";
+    const LANGUAGE_KEY = "LANGUAGE";
+    const FAV_PROD_KEY = "FAVORITE_PRODUCT";
+    const ALL_ATTRS_KEYS = [ORDER_KEY, LANGUAGE_KEY, FAV_PROD_KEY];
+
     function generalTests(testObjs) {
         testObjs.forEach(function(testObj) {
             var tstMsg = testObj[tstConsts.TST_MSG_KEY];
             var testData = testObj[tstConsts.INPUT_KEY];
             var attrs =  testData[consts.ATTRIBUTES_KEY_STR];
+            ALL_ATTRS_KEYS.forEach(function(attrKey){
+                if(!(attrKey in attrs)){attrs[attrKey] = "";}
+            });
             it(tstMsg, function()
             {
                 var result = translator.translate(testData[tstConsts.INPUT_KEY], attrs);
@@ -48,9 +56,6 @@ describe('General Translator Tests', function() {
         testCases.push(tstObj);
     }
 
-    const ORDER_KEY = "ORDER_VALUE";
-    const LANGUAGE_KEY = "LANGUAGE";
-    const FAV_PROD_KEY = "FAVORITE_PRODUCT";
     const sectionsPerValue = {
         orderGT200Text: "Order greater than 200",
         orderLTOE200Text: "Order less than or equal to 200",
