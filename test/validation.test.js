@@ -151,5 +151,27 @@ describe('General Validation Tests', function () {
         addToValidationTests(`Invalid attribute (legal operator: ${op})`, inputStr, [res]);
     });
 
+    //Invalid block order - simple
+    var elseifBlock = `${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${LANGUAGE_KEY}${consts.OP_EQ}'English'${consts.CUSTOM_CLOSE_DELIMITER}`;
+    var elseifFirstInputStr = `${elseifBlock} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+    var res = new ValidationResult(consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX, elseifBlock, consts.VALIDATION_ILLEGAL_BLOCK_ORDER_MSG);
+    addToValidationTests(`Invalid block order: ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX} before IF`, elseifFirstInputStr, [res]);
+/*
+    var inputStr = `
+        ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${LANGUAGE_KEY}${consts.OP_EQ}'English'${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+    var res = new ValidationResult(consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX,
+        `${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${LANGUAGE_KEY}${consts.OP_EQ}'English'${consts.CUSTOM_CLOSE_DELIMITER}`,
+        consts.VALIDATION_ILLEGAL_BLOCK_ORDER_MSG);
+    addToValidationTests(`Invalid block order: ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX} before IF`, `${inputStr} ${in}`, [res]);
+
+    var elseFirstInputStr = `
+        ${consts.CUSTOM_ELSE_BLOCK_TAG} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+    res = new ValidationResult(consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX,
+        consts.CUSTOM_ELSE_BLOCK_TAG, consts.VALIDATION_ILLEGAL_BLOCK_ORDER_MSG);
+    addToValidationTests(`Invalid block order: ${consts.CUSTOM_ELSE_BLOCK_TAG} before IF`, elseFirstInputStr, [res]);
+*/
+    //Invalid block order - compound (meaning smthing like if.... else... elseif / if...else...else)
+    //TODO...
+
     executeGeneralValidationTests();
 });
