@@ -192,7 +192,7 @@ describe('General Translator Tests', function() {
 
     //Languages - tag prefixes
     var possibleLanguageVals = ["Spanish", "englIsh", "Italian"];
-    var possiblePrefixes = tagPrefixes.GetAllPrefixes();
+    var possiblePrefixes = tagPrefixes.GetAllNonDatetimePrefixes();
     possiblePrefixes.forEach(function(tagPrefix) {
         var prefixedLangKey = `${tagPrefix}${consts.LOGICAL_CONDITION_DELIMITER}${LANGUAGE_KEY}`;
         var prefixedInputPageLang = `
