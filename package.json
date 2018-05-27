@@ -29,6 +29,7 @@
     "ejs": "^2.5.8",
     "ejs-lint": "^0.3.0",
     "lodash": "^4.17.5",
+    "moment": "^2.22.1",
     "unescape": "^1.0.1"
   },
   "deprecated": false,
