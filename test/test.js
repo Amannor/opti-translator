@@ -137,8 +137,8 @@ describe('General Translator Tests', () => {
   possibleLanguageVals.forEach((langVal) => {
     const langsAttrs = { [LANGUAGE_KEY]: langVal };
     const inputObj = { [tstConsts.INPUT_KEY]: INPUT_PAGE_WHITESPACES, [consts.ATTRIBUTES_KEY_STR]: langsAttrs };
-    const LangsCorrectResult = langVal == 'English' ? sectionsPerValue.languageEnglishText :
-      langVal != 'Italian' ? sectionsPerValue.languageSpanishText :
+    const LangsCorrectResult = langVal === 'English' ? sectionsPerValue.languageEnglishText :
+      langVal !== 'Italian' ? sectionsPerValue.languageSpanishText :
         sectionsPerValue.languageItalianText;
     addToTestCases(inputObj, LangsCorrectResult, `Whitespace test - should return string according to language value: ${langVal}`);
   });
@@ -153,8 +153,8 @@ describe('General Translator Tests', () => {
   possibleLanguageVals.forEach((langVal) => {
     const langsAttrs = { [LANGUAGE_KEY]: langVal };
     const inputObj = { [tstConsts.INPUT_KEY]: INPUT_PAGE_LANGUAGE, [consts.ATTRIBUTES_KEY_STR]: langsAttrs };
-    const LangsCorrectResult = langVal.toUpperCase() == 'English'.toUpperCase() ? sectionsPerValue.languageEnglishText :
-      langVal.toUpperCase() != 'Italian'.toUpperCase() ? sectionsPerValue.languageSpanishText :
+    const LangsCorrectResult = langVal.toUpperCase() === 'English'.toUpperCase() ? sectionsPerValue.languageEnglishText :
+      langVal.toUpperCase() !== 'Italian'.toUpperCase() ? sectionsPerValue.languageSpanishText :
         sectionsPerValue.languageItalianText;
     addToTestCases(inputObj, LangsCorrectResult, `should return string according to language value: ${langVal}`);
   });
@@ -164,8 +164,8 @@ describe('General Translator Tests', () => {
   possibleLanguageVals.forEach((langVal) => {
     const langsAttrs = { [`${consts.CUSTOM_OPEN_DELIMITER}${LANGUAGE_KEY}${consts.CUSTOM_CLOSE_DELIMITER}`]: langVal };
     const inputObj = { [tstConsts.INPUT_KEY]: INPUT_PAGE_LANGUAGE, [consts.ATTRIBUTES_KEY_STR]: langsAttrs };
-    const LangsCorrectResult = langVal.toUpperCase() == 'English'.toUpperCase() ? sectionsPerValue.languageEnglishText :
-      langVal.toUpperCase() != 'Italian'.toUpperCase() ? sectionsPerValue.languageSpanishText :
+    const LangsCorrectResult = langVal.toUpperCase() === 'English'.toUpperCase() ? sectionsPerValue.languageEnglishText :
+      langVal.toUpperCase() !== 'Italian'.toUpperCase() ? sectionsPerValue.languageSpanishText :
         sectionsPerValue.languageItalianText;
     addToTestCases(inputObj, LangsCorrectResult, `should return string according to language value ( ${consts.CUSTOM_OPEN_DELIMITER}${consts.CUSTOM_CLOSE_DELIMITER} in key): ${langVal}`);
   });
@@ -222,6 +222,19 @@ describe('General Translator Tests', () => {
       addToTestCases(inputObj, '', `should return empty result, checking that valid prefix (${curKey}) doesn't throw`);
     });
   });
+
+  // DateTime
+  const curDateKey = 'CURRENT_DATE';
+  // const curTimeKey = 'CURRENT_TIME';
+
+  const inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}yyyy${consts.OP_EQ}'2017'${consts.CUSTOM_CLOSE_DELIMITER}
+    Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
+  let inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [`${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}yyyy`]: 2017 } };
+  addToTestCases(inputObj, 'Lorem ipsum', `Date test s${curDateKey}${tagPrefixes.dateFormats.YY}${consts.OP_EQ}2017 - sent value 2017`);
+
+  inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [`${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}yyyy`]: 2016 } };
+  addToTestCases(inputObj, '', `Date test s${curDateKey}${tagPrefixes.dateFormats.YY}${consts.OP_EQ}2017 - sent value 2016`);
+
 
   /*
     //Languages - [%%] in input string
