@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 const { expect } = require('chai');
+const moment = require('moment');
 const translator = require('../index');
 const consts = require('../lib/consts.js');
 const tstConsts = require('./testConsts.js');
@@ -226,16 +227,20 @@ describe('General Translator Tests', () => {
   // DateTime
   const curDateKey = 'CURRENT_DATE';
   // const curTimeKey = 'CURRENT_TIME';
-
-  const inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}yyyy${consts.OP_EQ}'2017'${consts.CUSTOM_CLOSE_DELIMITER}
+  const curDateClause = `${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}yyyy`;
+  let inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateClause}${consts.OP_EQ}'2017'${consts.CUSTOM_CLOSE_DELIMITER}
     Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
-  let inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [`${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}yyyy`]: 2017 } };
-  addToTestCases(inputObj, 'Lorem ipsum', `Date test s${curDateKey}${tagPrefixes.dateFormats.YY}${consts.OP_EQ}2017 - sent value 2017`);
+  let inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateClause]: 2017 } };
+  addToTestCases(inputObj, 'Lorem ipsum', `Date test ${curDateClause}${consts.OP_EQ}2017 - sent value 2017`);
 
-  inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [`${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}yyyy`]: 2016 } };
-  addToTestCases(inputObj, '', `Date test s${curDateKey}${tagPrefixes.dateFormats.YY}${consts.OP_EQ}2017 - sent value 2016`);
+  inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateClause]: 2016 } };
+  addToTestCases(inputObj, '', `Date test ${curDateClause}${consts.OP_EQ}2017 - sent value 2016`);
 
-
+  inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateKey}${consts.OP_LT}'11/14/2017'${consts.CUSTOM_CLOSE_DELIMITER}
+    Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
+  const curDateVal = moment().format(String.raw`MM/DD/YYYY`);
+  inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: curDateVal } };
+  addToTestCases(inputObj, '', `Date test ${consts.OP_LT}'11/14/2017' - sent value ${curDateVal}`);
   /*
     //Languages - [%%] in input string
       // ******Need to stabilize******
