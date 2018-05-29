@@ -226,22 +226,35 @@ describe('General Translator Tests', () => {
   });
 
   // DateTime
-  const curDateKey = 'CURRENT_DATE';
-  // const curTimeKey = 'CURRENT_TIME';
-  const curDateClause = `${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}${datetimeHelper.dateFormats.y4}`;
+  const curDateKey = datetimeHelper.DateTags[0];
+  let curDateClause = `${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}${datetimeHelper.dateFormats.y4}`;
   let inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateClause}${consts.OP_EQ}2017${consts.CUSTOM_CLOSE_DELIMITER}
     Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
   let inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateClause]: 2017 } };
   addToTestCases(inputObj, 'Lorem ipsum', `Date test ${curDateClause}${consts.OP_EQ}2017 - sent value 2017`);
-
   inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateClause]: 2016 } };
   addToTestCases(inputObj, '', `Date test ${curDateClause}${consts.OP_EQ}2017 - sent value 2016`);
+
+  curDateClause = `${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}${datetimeHelper.dateFormats.d2}`;
+  inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateClause}${consts.OP_NEQ}06${consts.CUSTOM_CLOSE_DELIMITER}
+    Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
+  inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateClause]: 10 } };
+  addToTestCases(inputObj, 'Lorem ipsum', `Date test ${curDateClause}${consts.OP_NEQ}06 - sent value 10`);
 
   inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateKey}${consts.OP_LT}'11/14/2017'${consts.CUSTOM_CLOSE_DELIMITER}
     Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
   const curDateVal = moment().format(String.raw`MM/DD/YYYY`);
   inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: curDateVal } };
   addToTestCases(inputObj, '', `Date test ${consts.OP_LT}'11/14/2017' - sent value ${curDateVal}`);
+
+
+  /* - TODO make time test work
+  const curTimeKey = datetimeHelper.TimeTags[0];
+  inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curTimeKey}${consts.OP_GT}'08:19 AM'${consts.CUSTOM_CLOSE_DELIMITER}
+    Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
+  inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: '09:00 AM' } };
+  addToTestCases(inputObj, 'Lorem ipsum', `Time test ${curTimeKey}${consts.OP_GT}08:19 AM - sent 09:00 AM`);
+  */
   /*
     //Languages - [%%] in input string
       // ******Need to stabilize******
