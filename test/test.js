@@ -228,7 +228,7 @@ describe('General Translator Tests', () => {
   const curDateKey = 'CURRENT_DATE';
   // const curTimeKey = 'CURRENT_TIME';
   const curDateClause = `${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}yyyy`;
-  let inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateClause}${consts.OP_EQ}'2017'${consts.CUSTOM_CLOSE_DELIMITER}
+  let inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateClause}${consts.OP_EQ}2017${consts.CUSTOM_CLOSE_DELIMITER}
     Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
   let inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateClause]: 2017 } };
   addToTestCases(inputObj, 'Lorem ipsum', `Date test ${curDateClause}${consts.OP_EQ}2017 - sent value 2017`);
