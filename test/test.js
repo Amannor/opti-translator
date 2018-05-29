@@ -5,6 +5,7 @@ const translator = require('../index');
 const consts = require('../lib/consts.js');
 const tstConsts = require('./testConsts.js');
 const tagPrefixes = require('../lib/tagPrefixes.js');
+const datetimeHelper = require('../lib/datetimeHelper.js');
 
 /* global describe */
 /* global it */
@@ -227,7 +228,7 @@ describe('General Translator Tests', () => {
   // DateTime
   const curDateKey = 'CURRENT_DATE';
   // const curTimeKey = 'CURRENT_TIME';
-  const curDateClause = `${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}yyyy`;
+  const curDateClause = `${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}${datetimeHelper.dateFormats.y4}`;
   let inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateClause}${consts.OP_EQ}2017${consts.CUSTOM_CLOSE_DELIMITER}
     Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
   let inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateClause]: 2017 } };
