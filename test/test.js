@@ -248,14 +248,21 @@ describe('General Translator Tests', () => {
   inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: curDateVal } };
   addToTestCases(inputObj, '', `Date test ${curDateKey}${consts.OP_LT}'11/14/2017' - sent value ${curDateVal}`);
 
-  const inputObj2 = { [tstConsts.INPUT_KEY]: inputStr.replace(consts.OP_LT, consts.OP_GT), [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: curDateVal } };
-  addToTestCases(inputObj2, 'Lorem ipsum', `Date test ${curDateKey}${consts.OP_GT}'11/14/2017' - sent value ${curDateVal}`);
+  const inputObj2 = { [tstConsts.INPUT_KEY]: inputStr.replace(consts.OP_LT, consts.OP_LTE), [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: curDateVal } };
+  addToTestCases(inputObj2, '', `Date test ${curDateKey}${consts.OP_LTE}'11/14/2017' - sent value ${curDateVal}`);
 
-//  inputStr = "[%IF:CURRENT_DATE:dd==06%]</p><p>=6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd<06%]</p><p><6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd>06%]</p><p>>6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd!=06%]</p><p>!=6 [%END:IF%]</p><p>[%ELSE%]</p><p>DEFAULT [%END:IF%]\"
+  const inputObj3 = { [tstConsts.INPUT_KEY]: inputStr.replace(consts.OP_LT, consts.OP_GT), [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: curDateVal } };
+  addToTestCases(inputObj3, 'Lorem ipsum', `Date test ${curDateKey}${consts.OP_GT}'11/14/2017' - sent value ${curDateVal}`);
 
+  const inputObj4 = { [tstConsts.INPUT_KEY]: inputStr.replace(consts.OP_LT, consts.OP_GTE), [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: curDateVal } };
+  addToTestCases(inputObj4, 'Lorem ipsum', `Date test ${curDateKey}${consts.OP_GTE}'11/14/2017' - sent value ${curDateVal}`);
 
+  const inputObj5 = { [tstConsts.INPUT_KEY]: inputStr.replace(consts.OP_LT, consts.OP_EQ), [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: curDateVal } };
+  addToTestCases(inputObj5, '', `Date test ${curDateKey}${consts.OP_EQ}'11/14/2017' - sent value ${curDateVal}`);
 
-
+  const inputObj6 = { [tstConsts.INPUT_KEY]: inputStr.replace(consts.OP_LT, consts.OP_NEQ), [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: curDateVal } };
+  addToTestCases(inputObj6, 'Lorem ipsum', `Date test ${curDateKey}${consts.OP_NEQ}'11/14/2017' - sent value ${curDateVal}`);
+  //  inputStr = "[%IF:CURRENT_DATE:dd==06%]</p><p>=6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd<06%]</p><p><6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd>06%]</p><p>>6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd!=06%]</p><p>!=6 [%END:IF%]</p><p>[%ELSE%]</p><p>DEFAULT [%END:IF%]\"
 
 
   /* - TODO make time test work
