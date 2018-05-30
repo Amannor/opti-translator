@@ -226,7 +226,7 @@ describe('General Translator Tests', () => {
   });
 
   // DateTime
-  const curDateKey = datetimeHelper.DateTags[0];
+  let curDateKey = datetimeHelper.DateTags[0];
   let curDateClause = `${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}${datetimeHelper.dateFormats.y4}`;
   let inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateClause}${consts.OP_EQ}2017${consts.CUSTOM_CLOSE_DELIMITER}
     Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
@@ -241,11 +241,21 @@ describe('General Translator Tests', () => {
   inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateClause]: 10 } };
   addToTestCases(inputObj, 'Lorem ipsum', `Date test ${curDateClause}${consts.OP_NEQ}06 - sent value 10`);
 
+  curDateKey = 'BDAY';
   inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateKey}${consts.OP_LT}'11/14/2017'${consts.CUSTOM_CLOSE_DELIMITER}
     Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
   const curDateVal = moment().format(String.raw`MM/DD/YYYY`);
   inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: curDateVal } };
-  addToTestCases(inputObj, '', `Date test ${consts.OP_LT}'11/14/2017' - sent value ${curDateVal}`);
+  addToTestCases(inputObj, '', `Date test ${curDateKey}${consts.OP_LT}'11/14/2017' - sent value ${curDateVal}`);
+
+  const inputObj2 = { [tstConsts.INPUT_KEY]: inputStr.replace(consts.OP_LT, consts.OP_GT), [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: curDateVal } };
+  addToTestCases(inputObj2, 'Lorem ipsum', `Date test ${curDateKey}${consts.OP_GT}'11/14/2017' - sent value ${curDateVal}`);
+
+//  inputStr = "[%IF:CURRENT_DATE:dd==06%]</p><p>=6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd<06%]</p><p><6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd>06%]</p><p>>6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd!=06%]</p><p>!=6 [%END:IF%]</p><p>[%ELSE%]</p><p>DEFAULT [%END:IF%]\"
+
+
+
+
 
 
   /* - TODO make time test work
