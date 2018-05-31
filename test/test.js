@@ -29,8 +29,10 @@ describe('General Translator Tests', () => {
         if (!(attrKey in attrs)) { attrs[attrKey] = ''; }
       });
       it(tstMsg, () => {
-        const result = translator.translate(testData[tstConsts.INPUT_KEY], attrs);
+        const result = translator.translate(testData[tstConsts.INPUT_KEY], attrs, true);
         expect(result[consts.OUTPUT_KEY_STR].trim()).to.equal(testObj[tstConsts.CORRECT_RESULT_KEY].trim());
+        const validationResults = result[consts.VALIDATE_OUTPUT_KEY_STR] || [];
+        expect(validationResults.length).to.equal(0);
       });
       it(`${tstMsg} - brackets transformation in attrs keys`, () => {
         const transformedAttrs = {};
@@ -40,8 +42,10 @@ describe('General Translator Tests', () => {
             `${consts.CUSTOM_OPEN_DELIMITER}${attrKey}${consts.CUSTOM_CLOSE_DELIMITER}`;
           transformedAttrs[newKey] = attrs[attrKey];
         });
-        const result = translator.translate(testData[tstConsts.INPUT_KEY], transformedAttrs);
+        const result = translator.translate(testData[tstConsts.INPUT_KEY], transformedAttrs, true);
         expect(result[consts.OUTPUT_KEY_STR].trim()).to.equal(testObj[tstConsts.CORRECT_RESULT_KEY].trim());
+        const validationResults = result[consts.VALIDATE_OUTPUT_KEY_STR] || [];
+        expect(validationResults.length).to.equal(0);
       });
     });
   }
@@ -220,7 +224,7 @@ describe('General Translator Tests', () => {
     curKeys.forEach((curKey) => {
       const inputStr = `                                                                                                                                                        
                    ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curKey}>200${consts.CUSTOM_CLOSE_DELIMITER} body ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
-      const inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { placeholderKey: 'placeholderVal' } };
+      const inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curKey]: 'placeholderVal' } };
       addToTestCases(inputObj, '', `should return empty result, checking that valid prefix (${curKey}) doesn't throw`);
     });
   });

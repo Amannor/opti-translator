@@ -142,8 +142,7 @@ describe('General Validation Tests', () => {
   illegalOps.forEach((op) => {
     const inputStr = `
                ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}${op}200${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
-    let invalidCond = inputStr.substring(
-      inputStr.indexOf(consts.CUSTOM_OPENING_IF_BLOCK_PREFIX) + consts.CUSTOM_OPENING_IF_BLOCK_PREFIX.length,
+    let invalidCond = inputStr.substring(0,
       inputStr.indexOf(consts.CUSTOM_CLOSE_DELIMITER) + consts.CUSTOM_CLOSE_DELIMITER.length,
     );
     invalidCond = invalidCond.replace(consts.CUSTOM_CLOSE_DELIMITER, '').replace(consts.CUSTOM_OPEN_DELIMITER, '').trim();
@@ -157,7 +156,7 @@ describe('General Validation Tests', () => {
   // Invalid attribute
   const invalidAttr = 'ddddddddddddd';
   consts.LEGAL_OPERATORS.forEach((op) => {
-    const invalidCond = `${invalidAttr}${consts.OP_EQ}'Italian'`;
+    const invalidCond = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${invalidAttr}${consts.OP_EQ}'Italian'`.replace(consts.CUSTOM_OPEN_DELIMITER, '');
     const inputStr = `
         ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${invalidCond}${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
         ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${LANGUAGE_KEY}${consts.OP_EQ}'English'${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
