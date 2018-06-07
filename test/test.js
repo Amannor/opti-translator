@@ -75,7 +75,14 @@ describe('General Translator Tests', () => {
     favProductNonExistenceText: 'No favorite product',
   };
 
-    // orders
+  // Existence testing
+
+  const inputPageExistenceTst = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${FAV_PROD_KEY}${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.favProductExistenceText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+    ${consts.CUSTOM_ELSE_BLOCK_TAG} ${sectionsPerValue.favProductNonExistenceText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+  const inputObjForExistenceTst = { [tstConsts.INPUT_KEY]: inputPageExistenceTst, [consts.ATTRIBUTES_KEY_STR]: { [FAV_PROD_KEY]: 'Lorem ipsum prod' } };
+  addToTestCases(inputObjForExistenceTst, sectionsPerValue.favProductExistenceText, `Existence tst - ket (${FAV_PROD_KEY}) exists`);
+
+  // orders
   const inputPageOrders = `
         ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}>200${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.orderGT200Text} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
         ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${ORDER_KEY}>100${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.orderGT100LT200Text} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}

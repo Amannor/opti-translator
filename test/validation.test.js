@@ -4,11 +4,13 @@
 const expect = require('chai').expect;
 const decode = require('unescape');
 const _ = require('lodash');
+const moment = require('moment');
 const translator = require('../index');
 const consts = require('../lib/consts.js');
 const tstConsts = require('./testConsts.js');
 const tagPrefixes = require('../lib/tagPrefixes.js');
 const ValidationResult = require('../lib/validationResult.js');
+const CondFormatter = require('../lib/formatter');
 
 describe('General Validation Tests', () => {
   function areValidationResultsEqual(lhs, rhs) {
@@ -179,6 +181,16 @@ describe('General Validation Tests', () => {
     consts.CUSTOM_ELSE_BLOCK_TAG, consts.VALIDATION_ILLEGAL_BLOCK_ORDER_MSG,
   );
   addToValidationTests(`Invalid block order: ${consts.CUSTOM_ELSE_BLOCK_TAG} before IF`, elseFirstInputStr, [res]);
+
+  /*
+  // DateTime - non-explicit tags
+  const datetimeKey = 'datetimeAttr';
+  const datetimeVal1 = moment();
+  const formatter = new CondFormatter();
+*/
+
+    // DateTime - explicit tags
+
   /*
     var inputStr = `
         ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${LANGUAGE_KEY}${consts.OP_EQ}'English'${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
