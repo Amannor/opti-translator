@@ -2,7 +2,6 @@
 
 
 const expect = require('chai').expect;
-const decode = require('unescape');
 const _ = require('lodash');
 const moment = require('moment');
 const translator = require('../index');
