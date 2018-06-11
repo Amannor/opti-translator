@@ -275,6 +275,7 @@ describe('General Translator Tests', () => {
   addToTestCases(inputObj6, 'Lorem ipsum', `Date test ${curDateKey}${consts.OP_NEQ}'11/14/2017' - sent value ${curDateVal}`);
   //  inputStr = "[%IF:CURRENT_DATE:dd==06%]</p><p>=6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd<06%]</p><p><6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd>06%]</p><p>>6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd!=06%]</p><p>!=6 [%END:IF%]</p><p>[%ELSE%]</p><p>DEFAULT [%END:IF%]\"
 
+  //todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
 
   /* - TODO make time test work
   const curTimeKey = datetimeHelper.TimeTags[0];

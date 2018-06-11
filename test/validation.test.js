@@ -181,6 +181,8 @@ describe('General Validation Tests', () => {
   );
   addToValidationTests(`Invalid block order: ${consts.CUSTOM_ELSE_BLOCK_TAG} before IF`, elseFirstInputStr, [res]);
 
+  //todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
+
   /*
   // DateTime - non-explicit tags
   const datetimeKey = 'datetimeAttr';
