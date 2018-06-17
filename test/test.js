@@ -275,15 +275,46 @@ describe('General Translator Tests', () => {
   addToTestCases(inputObj6, 'Lorem ipsum', `Date test ${curDateKey}${consts.OP_NEQ}'11/14/2017' - sent value ${curDateVal}`);
   //  inputStr = "[%IF:CURRENT_DATE:dd==06%]</p><p>=6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd<06%]</p><p><6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd>06%]</p><p>>6 [%END:IF%]</p><p>[%ELSEIF:CURRENT_DATE:dd!=06%]</p><p>!=6 [%END:IF%]</p><p>[%ELSE%]</p><p>DEFAULT [%END:IF%]\"
 
-  //todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
+  // todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
+
+  const inputPrefix = '\n\n\t Your Name is: [%FIRST_NAME%]\n\nYour Email is: [%EMAIL%]\n\n\n';
+  inputStr = `${inputPrefix}[%IF:[%FIRST_NAME%]=='Alon'%]Msg only for Alon\n\n[%END:IF%]
+
+    [%ELSEIF:[%FIRST_NAME%]=='Itay'%]
+
+    Msg only for Itay
+
+                     [%END:IF%]
+
+    [%ELSEIF:[%FIRST_NAME%]=='Nitzan'%]
+
+    Msg only for Nitzan
+
+                     [%END:IF%]
+
+    [%ELSEIF:[%FIRST_NAME%]=='Dudu'%]
+
+    Msg only for Dudu
+
+                     [%END:IF%]
+
+    [%ELSE%]
+
+    Default msg for no one specific
+
+        [%END:IF%]
+`;
+
+  const inputObjForLiteralTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { EMAIL: 'alon_m@optimove.com', FIRST_NAME: 'Alon' } };
+  addToTestCases(inputObjForLiteralTst, `${inputPrefix}Msg only for Alon\n\n`, 'Literal test');
 
   /* - TODO make time test work
-  const curTimeKey = datetimeHelper.TimeTags[0];
-  inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curTimeKey}${consts.OP_GT}'08:19 AM'${consts.CUSTOM_CLOSE_DELIMITER}
-    Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
-  inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: '09:00 AM' } };
-  addToTestCases(inputObj, 'Lorem ipsum', `Time test ${curTimeKey}${consts.OP_GT}08:19 AM - sent 09:00 AM`);
-  */
+    const curTimeKey = datetimeHelper.TimeTags[0];
+    inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curTimeKey}${consts.OP_GT}'08:19 AM'${consts.CUSTOM_CLOSE_DELIMITER}
+      Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
+    inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: '09:00 AM' } };
+    addToTestCases(inputObj, 'Lorem ipsum', `Time test ${curTimeKey}${consts.OP_GT}08:19 AM - sent 09:00 AM`);
+    */
   /*
     //Languages - [%%] in input string
       // ******Need to stabilize******
