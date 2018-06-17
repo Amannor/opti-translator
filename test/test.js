@@ -240,7 +240,7 @@ describe('General Translator Tests', () => {
   let curDateKey = datetimeHelper.DateTags[0];
   let curDateClause = `${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}${datetimeHelper.dateFormats.y4}`;
   let inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateClause}${consts.OP_EQ}2017${consts.CUSTOM_CLOSE_DELIMITER}
-    Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
+    Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
   let inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateClause]: 2017 } };
   addToTestCases(inputObj, 'Lorem ipsum', `Date test ${curDateClause}${consts.OP_EQ}2017 - sent value 2017`);
   inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateClause]: 2016 } };
@@ -248,13 +248,13 @@ describe('General Translator Tests', () => {
 
   curDateClause = `${curDateKey}${consts.LOGICAL_CONDITION_DELIMITER}${datetimeHelper.dateFormats.d2}`;
   inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateClause}${consts.OP_NEQ}06${consts.CUSTOM_CLOSE_DELIMITER}
-    Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
+    Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
   inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateClause]: 10 } };
   addToTestCases(inputObj, 'Lorem ipsum', `Date test ${curDateClause}${consts.OP_NEQ}06 - sent value 10`);
 
   curDateKey = 'BDAY';
   inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateKey}${consts.OP_LT}'11/14/2017'${consts.CUSTOM_CLOSE_DELIMITER}
-    Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}'`;
+    Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
   const curDateVal = moment().format(String.raw`MM/DD/YYYY`);
   inputObj = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curDateKey]: curDateVal } };
   addToTestCases(inputObj, '', `Date test ${curDateKey}${consts.OP_LT}'11/14/2017' - sent value ${curDateVal}`);
@@ -308,6 +308,11 @@ describe('General Translator Tests', () => {
   const inputObjForLiteralTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { EMAIL: 'alon_m@optimove.com', FIRST_NAME: 'Alon' } };
   addToTestCases(inputObjForLiteralTst, `${inputPrefix}Msg only for Alon\n\n`, 'Literal test');
 
+
+  inputStr = `Hi [%FIRST_NAME%]    ======    [%IF:[%EMAIL%]=='roman_y@optimove.com'%]      Специальное предложение отправлено на адрес Романа        Special offer sent to Roman's email                  [%END:IF%]    [%ELSEIF:EMAIL=='haimi_g@optimove.com'%]      Oferta especial enviada al correo electrónico de Haimi              [%END:IF%]    [%ELSEIF:EMAIL=='inna_o@optimove.com'%]      Special offer sent to Inna's email              [%END:IF%]    [%ELSEIF:EMAIL=='itay_t@optimove.com'%]      Special offer sent to Itay's email              [%END:IF%]    [%ELSEIF:EMAIL=='omer_p@optimove.com'%]      Special offer sent to Omer's email                    [%END:IF%]      [%ELSEIF:EMAIL=='valeriia_v@optimove.com'%]      Special offer sent to Valeriia's email          [%END:IF%]        [%ELSE%]      Special offer sent to your email              [%END:IF%]    =======    Click here [%UNSUB%] to unsubscribe        `;
+  const resStr = `Hi [%FIRST_NAME%]    ======          Special offer sent to your email                  =======    Click here [%UNSUB%] to unsubscribe        `;
+  const inputObjForLiteralTst2 = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { EMAIL: 'literalTst2@optimove.com' } };
+  addToTestCases(inputObjForLiteralTst2, resStr, 'Literal test2');
   /* - TODO make time test work
     const curTimeKey = datetimeHelper.TimeTags[0];
     inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curTimeKey}${consts.OP_GT}'08:19 AM'${consts.CUSTOM_CLOSE_DELIMITER}

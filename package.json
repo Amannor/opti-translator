@@ -29,7 +29,8 @@
     "ejs": "^2.6.1",
     "ejs-lint": "^0.3.0",
     "lodash": "^4.17.10",
-    "moment": "^2.22.2"
+    "moment": "^2.22.2",
+    "moment-parseformat": "^3.0.0"
   },
   "deprecated": false,
   "description": "Wrapping EJS for opti-conditional lang",
