@@ -12,6 +12,24 @@ const ValidationResult = require('../lib/validationResult.js');
 const CondFormatter = require('../lib/formatter');
 
 describe('General Validation Tests', () => {
+  function validationResultsSorter(lhs, rhs) {
+    if (lhs instanceof ValidationResult && rhs instanceof ValidationResult) {
+      return lhs.compareValidation(rhs);
+    }
+    throw 'Only able to sort ValidationResult instances';
+  }
+
+  function areValidationResultsEqual_generalErrorsAdapter(lhs, rhs) {
+    if (lhs.conditionalBlockId === consts.VALIDATION_UNASSIGNED_INDEX &&
+        rhs.conditionalBlockId === consts.VALIDATION_UNASSIGNED_INDEX &&
+        lhs.innerBlockOrder === consts.VALIDATION_UNASSIGNED_INDEX &&
+        rhs.innerBlockOrder === consts.VALIDATION_UNASSIGNED_INDEX) {
+      return true;
+    }
+    return areValidationResultsEqualIgnoreDetails(lhs, rhs);
+  }
+
+
   function areValidationResultsEqual(lhs, rhs) {
     if (rhs == null) {
       return lhs == null;
@@ -51,22 +69,22 @@ describe('General Validation Tests', () => {
     tstObjs.forEach((testObj) => {
       const tstMsg = testObj[tstConsts.TST_MSG_KEY];
       const testInputStr = testObj[tstConsts.INPUT_KEY];
-      const expectedValidationResults = testObj[consts.VALIDATE_OUTPUT_KEY_STR];
+      const expectedValidationResults = testObj[consts.VALIDATE_OUTPUT_KEY_STR].sort(validationResultsSorter);
       const maxClausesPerBlock = testObj[consts.VALIDATION_INPUT_KEY_MAX_CONDS_PER_BLOCK];
       const maxBlocksPerTemplate = testObj[consts.VALIDATION_INPUT_KEY_MAX_BLOCKS_PER_TEMPLATE];
       const attrs = testObj[consts.ATTRIBUTES_KEY_STR];
-
+      const comparisonFunc = testObj[tstConsts.CUSTOM_COMPARATOR_KEY] || areValidationResultsEqualIgnoreDetails;
 
       it(tstMsg, () => {
         const result = translator.translate(testInputStr, attrs, true, maxClausesPerBlock, maxBlocksPerTemplate);
-        const actualValidationResults = result[consts.VALIDATE_OUTPUT_KEY_STR];
-        expect(_.differenceWith(expectedValidationResults, actualValidationResults, areValidationResultsEqualIgnoreDetails).length).to.equal(0);
-        expect(_.differenceWith(actualValidationResults, expectedValidationResults, areValidationResultsEqualIgnoreDetails).length).to.equal(0);
+        const actualValidationResults = result[consts.VALIDATE_OUTPUT_KEY_STR].sort(validationResultsSorter);
+        expect(_.differenceWith(expectedValidationResults, actualValidationResults, comparisonFunc).length).to.equal(0);
+        expect(_.differenceWith(actualValidationResults, expectedValidationResults, comparisonFunc).length).to.equal(0);
       });
     });
   }
 
-  function addToValidationTests(msgToAdd, inputToAdd, resultsToAdd, attrsObj = generateEmptyLegalAttrs(), maxClausesPerBlock = null, maxBlocksPerTemplate = null) {
+  function addToValidationTests(msgToAdd, inputToAdd, resultsToAdd, attrsObj = generateEmptyLegalAttrs(), maxClausesPerBlock = null, maxBlocksPerTemplate = null, comparatorFunc = areValidationResultsEqualIgnoreDetails) {
     const tstObj = {};
     tstObj[tstConsts.TST_MSG_KEY] = msgToAdd;
     tstObj[tstConsts.INPUT_KEY] = inputToAdd;
@@ -74,7 +92,7 @@ describe('General Validation Tests', () => {
     tstObj[consts.VALIDATION_INPUT_KEY_MAX_CONDS_PER_BLOCK] = maxClausesPerBlock;
     tstObj[consts.VALIDATION_INPUT_KEY_MAX_BLOCKS_PER_TEMPLATE] = maxBlocksPerTemplate;
     tstObj[consts.ATTRIBUTES_KEY_STR] = attrsObj;
-
+    tstObj[tstConsts.CUSTOM_COMPARATOR_KEY] = comparatorFunc;
     tstObjs.push(tstObj);
   }
 
@@ -143,7 +161,8 @@ describe('General Validation Tests', () => {
   illegalOps.forEach((op) => {
     const inputStr = `
                ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}${op}200${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
-    let invalidCond = inputStr.substring(0,
+    let invalidCond = inputStr.substring(
+      0,
       inputStr.indexOf(consts.CUSTOM_CLOSE_DELIMITER) + consts.CUSTOM_CLOSE_DELIMITER.length,
     );
     invalidCond = invalidCond.replace(consts.CUSTOM_CLOSE_DELIMITER, '').replace(consts.CUSTOM_OPEN_DELIMITER, '').trim();
@@ -181,7 +200,31 @@ describe('General Validation Tests', () => {
   );
   addToValidationTests(`Invalid block order: ${consts.CUSTOM_ELSE_BLOCK_TAG} before IF`, elseFirstInputStr, [res]);
 
-  //todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
+
+  inputStr = `[%IF:<span style='color: rgb(0, 0, 0); font-family: "Times New Roman"; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;'>CAMPAIGN_ID > 5</span>%]</p>
+  <p>Специальное предложение отправлено на адрес РоманаSpecial offer sent to Roman's email</p>
+  <p>[%END:IF%]</p>
+  <p>[%ELSEIF:EMAIL=='haimi_g@optimove.com'%]</p>
+  <p>Oferta especial enviada al correo electrónico de Haimi</p>
+  <p>[%END:IF%]</p>
+  <p>[%ELSEIF:EMAIL=='inna_o@optimove.com'%]</p>
+  <p>Special offer sent to Inna's email [%END:IF%]</p>
+  <p>[%ELSE%]Special offer sent to your email[%END:IF%]`;
+  const jsonizedAttrs = `{
+  "span style='color: rgb(0, 0, 0); font-family: \\\"Times New Roman\\\"; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;'>CAMPAIGN_ID > 5": "",
+  "EMAIL": "",
+  "ELSE": ""
+  }`;
+  const attrs = JSON.parse(jsonizedAttrs);
+  const errors = [new ValidationResult(),
+    new ValidationResult(
+      consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX,
+      `IF:<SPAN STYLE='COLOR: RGB(0, 0, 0); FONT-FAMILY: "TIMES NEW ROMAN"; FONT-SIZE: MEDIUM; FONT-STYLE: NORMAL; FONT-VARIANT-LIGATURES: NORMAL; FONT-VARIANT-CAPS: NORMAL; FONT-WEIGHT: 400; LETTER-SPACING: NORMAL; ORPHANS: 2; TEXT-ALIGN: START; TEXT-INDENT: 0PX; TEXT-TRANSFORM: NONE; WHITE-SPACE: NORMAL; WIDOWS: 2; WORD-SPACING: 0PX; -WEBKIT-TEXT-STROKE-WIDTH: 0PX; TEXT-DECORATION-STYLE: INITIAL; TEXT-DECORATION-COLOR: INITIAL; DISPLAY: INLINE !IMPORTANT; FLOAT: NONE;'>CAMPAIGN_ID > 5</SPAN>`,
+      consts.VALIDATION_COND_MSG,
+    )];
+
+  addToValidationTests('Literal Tst - checking general translation error', inputStr, errors, attrs, 10, 10, areValidationResultsEqual_generalErrorsAdapter);
+  // todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
 
   /*
   // DateTime - non-explicit tags
@@ -190,7 +233,7 @@ describe('General Validation Tests', () => {
   const formatter = new CondFormatter();
 */
 
-    // DateTime - explicit tags
+  // DateTime - explicit tags
 
   /*
     var inputStr = `
