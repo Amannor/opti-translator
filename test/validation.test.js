@@ -115,9 +115,9 @@ describe('General Validation Tests', () => {
   };
 
     // A single [%END:IF%} missing
-  var inputStr = `
+  let inputStr = `
         ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}>200${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.orderGT200Text}`;
-  var res = new ValidationResult(
+  let res = new ValidationResult(
     consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX,
     `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}>200${consts.CUSTOM_CLOSE_DELIMITER}`, `${consts.VALIDATION_BLOCK_MSG} - missing required closing clause ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`,
   );
@@ -125,13 +125,13 @@ describe('General Validation Tests', () => {
 
 
   // More blocks than allowed
-  var inputStr = `
+  inputStr = `
         ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}>200${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.orderGT200Text} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
 
   inputStr = `${inputStr} ${inputStr} ${inputStr}`;
   const maxAllowedCondBlocksNum = 2;
   const validationMsg = `${consts.VALIDATION_BLOCK_MSG}: block #${maxAllowedCondBlocksNum + 1} exceeds max number of allowed blocks: ${maxAllowedCondBlocksNum}`;
-  var res = new ValidationResult(
+  res = new ValidationResult(
     maxAllowedCondBlocksNum, consts.VALIDATION_START_INDEX,
     `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}>200${consts.CUSTOM_CLOSE_DELIMITER}`, validationMsg,
   );
@@ -145,7 +145,7 @@ describe('General Validation Tests', () => {
       `${prefix}${consts.LOGICAL_CONDITION_DELIMITER}A${consts.LOGICAL_CONDITION_DELIMITER}B${consts.LOGICAL_CONDITION_DELIMITER}C`,
     ];
     curKeys.forEach((curKey) => {
-      const inputStr = `                                                                                                                                                        
+      inputStr = `                                                                                                                                                        
                    ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curKey}>200${consts.CUSTOM_CLOSE_DELIMITER} body ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
       addToValidationTests(`Valid prefixes checked: ${curKey}`, inputStr, [], { [curKey]: '' });
     });
@@ -153,20 +153,20 @@ describe('General Validation Tests', () => {
 
   // Operators testing (both legal & illegal)
   consts.LEGAL_OPERATORS.forEach((op) => {
-    const inputStr = `
+    inputStr = `
                ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}${op}200${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
     addToValidationTests(`Legal operator: ${op}`, inputStr, []);
   });
   const illegalOps = ['=', '=!', '=!!', '=!!!', '!', '!!'];
   illegalOps.forEach((op) => {
-    const inputStr = `
+    inputStr = `
                ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}${op}200${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
     let invalidCond = inputStr.substring(
       0,
       inputStr.indexOf(consts.CUSTOM_CLOSE_DELIMITER) + consts.CUSTOM_CLOSE_DELIMITER.length,
     );
     invalidCond = invalidCond.replace(consts.CUSTOM_CLOSE_DELIMITER, '').replace(consts.CUSTOM_OPEN_DELIMITER, '').trim();
-    const res = new ValidationResult(
+    res = new ValidationResult(
       consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX,
       invalidCond, consts.VALIDATION_COND_MSG,
     );
@@ -177,10 +177,10 @@ describe('General Validation Tests', () => {
   const invalidAttr = 'ddddddddddddd';
   consts.LEGAL_OPERATORS.forEach((op) => {
     const invalidCond = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${invalidAttr}${consts.OP_EQ}'Italian'`.replace(consts.CUSTOM_OPEN_DELIMITER, '');
-    const inputStr = `
+    inputStr = `
         ${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${invalidCond}${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
         ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${LANGUAGE_KEY}${consts.OP_EQ}'English'${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
-    const res = new ValidationResult(
+    res = new ValidationResult(
       consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX,
       invalidCond, consts.VALIDATION_COND_MSG,
     );
@@ -190,7 +190,7 @@ describe('General Validation Tests', () => {
   // Invalid block order - simple
   const elseifBlock = `${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${LANGUAGE_KEY}${consts.OP_EQ}'English'${consts.CUSTOM_CLOSE_DELIMITER}`;
   const elseifFirstInputStr = `${elseifBlock} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
-  var res = new ValidationResult(consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX, elseifBlock, consts.VALIDATION_ILLEGAL_BLOCK_ORDER_MSG);
+  res = new ValidationResult(consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX, elseifBlock, consts.VALIDATION_ILLEGAL_BLOCK_ORDER_MSG);
   addToValidationTests(`Invalid block order: ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX} before IF`, elseifFirstInputStr, [res]);
 
   const elseFirstInputStr = `${consts.CUSTOM_ELSE_BLOCK_TAG} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
@@ -224,6 +224,22 @@ describe('General Validation Tests', () => {
     )];
 
   addToValidationTests('Literal Tst - checking general translation error', inputStr, errors, attrs, 10, 10, areValidationResultsEqual_generalErrorsAdapter);
+
+  /*
+  const isCustomer1StrA = `              <!--BEGIN ec_Ad-->              <a href="https://www.californiapsychics.com/buy-package?utm_source=optimove&utm_medium=newsletter&utm_campaign=optimove_n_oa_all_dailynewsletter-[%LOWER:LAST_PROMO_SENT%]&utm_term=[%CURRENT_DATE:yyyyMMdd%]" style="text-decoration:none;" target="_blank"><img src="http://news.californiapsychics.com/newsletter/ec_ads/ec_a_[%LOWER:LAST_PROMO_SENT%].jpg?v=[%CURRENT_DATE:yyyyMMdd%]" alt="Get Answers Today" border="0" style="font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;overflow:hidden;mso-line-height-rule:exactly;line-height:1px;width:100%;height:auto;display:block;" class="fr-draggable"></a>              <!--END ec_Ad-->`;
+  const isCustomerNot1StrA = `              <!--BEGIN subAd-->              <a href="https://www.californiapsychics.com/psychic-readings?utm_source=optimove&utm_medium=newsletter&utm_campaign=optimove_n_oa_all_dailynewsletter-nonc-[%NEWS_NON_CUSTOMER_DAY%]&utm_term=[%CURRENT_DATE:yyyyMMdd%]" style="text-decoration:none;" target="_blank"><img src="http://news.californiapsychics.com/newsletter/sub_ads/[%NEWS_NON_CUSTOMER_DAY%]_a_300nl.jpg?v=[%CURRENT_DATE:yyyyMMdd%]" alt="Get Answers Today" border="0" style="font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;overflow:hidden;mso-line-height-rule:exactly;line-height:1px;width:100%;height:auto;display:block;" class="fr-draggable"></a>              <!--END subAd-->`;
+  const middleStr = ` </td>             <td align="center" style="padding:0 0 0 0;margin:0 0 0 0;max-width:300px;" valign="top" width="300"> `;
+  const isCustomer1StrB = `              <!--BEGIN ec_Ad-->              <a href="https://www.californiapsychics.com/buy-package?utm_source=optimove&utm_medium=newsletter&utm_campaign=optimove_n_oa_all_dailynewsletter-[%LOWER:LAST_PROMO_SENT%]&utm_term=[%CURRENT_DATE:yyyyMMdd%]" style="text-decoration:none;" target="_blank"><img src="http://news.californiapsychics.com/newsletter/ec_ads/ec_b_[%LOWER:LAST_PROMO_SENT%].jpg?v=[%CURRENT_DATE:yyyyMMdd%]" alt="Start Now" border="0" style="font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;overflow:hidden;mso-line-height-rule:exactly;line-height:1px;width:100%;height:auto;display:block;" class="fr-draggable"></a>              <!--END ec_Ad-->`;
+ const isCustomerNot1StrB = `              <!--BEGIN subAd-->              <a href="https://www.californiapsychics.com/psychic-readings?utm_source=optimove&utm_medium=newsletter&utm_campaign=optimove_n_oa_all_dailynewsletter-nonc-[%NEWS_NON_CUSTOMER_DAY%]&utm_term=[%CURRENT_DATE:yyyyMMdd%]" style="text-decoration:none;" target="_blank"><img src="http://news.californiapsychics.com/newsletter/sub_ads/[%NEWS_NON_CUSTOMER_DAY%]_b_300nl.jpg?v=[%CURRENT_DATE:yyyyMMdd%]" alt="Start Now" border="0" style="font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;overflow:hidden;mso-line-height-rule:exactly;line-height:1px;width:100%;height:auto;display:block;" class="fr-draggable"></a>              <!--END subAd-->`;
+  inputStr = `[%IF:IS_CUSTOMER==1%]${isCustomer1StrA}[%END:IF%] [%ELSE%]${isCustomerNot1StrA}[%END:IF%]${middleStr}[%IF:IS_CUSTOMER==1%]${isCustomer1StrB}[%END:IF%] [%ELSE%]${isCustomerNot1StrB}[%END:IF%]`;
+  const isCustomerVals = [0, 1];
+  isCustomerVals.forEach(
+      value =>
+      {
+
+      }
+  );
+*/
   // todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
 
   /*
