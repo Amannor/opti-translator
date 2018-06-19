@@ -3,13 +3,12 @@
 
 const expect = require('chai').expect;
 const _ = require('lodash');
-const moment = require('moment');
 const translator = require('../index');
 const consts = require('../lib/consts.js');
 const tstConsts = require('./testConsts.js');
 const tagPrefixes = require('../lib/tagPrefixes.js');
 const ValidationResult = require('../lib/validationResult.js');
-const CondFormatter = require('../lib/formatter');
+const datetimeHelper = require('../lib/datetimeHelper.js');
 
 describe('General Validation Tests', () => {
   function validationResultsSorter(lhs, rhs) {
@@ -219,7 +218,7 @@ describe('General Validation Tests', () => {
   const errors = [new ValidationResult(),
     new ValidationResult(
       consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX,
-      `IF:<SPAN STYLE='COLOR: RGB(0, 0, 0); FONT-FAMILY: "TIMES NEW ROMAN"; FONT-SIZE: MEDIUM; FONT-STYLE: NORMAL; FONT-VARIANT-LIGATURES: NORMAL; FONT-VARIANT-CAPS: NORMAL; FONT-WEIGHT: 400; LETTER-SPACING: NORMAL; ORPHANS: 2; TEXT-ALIGN: START; TEXT-INDENT: 0PX; TEXT-TRANSFORM: NONE; WHITE-SPACE: NORMAL; WIDOWS: 2; WORD-SPACING: 0PX; -WEBKIT-TEXT-STROKE-WIDTH: 0PX; TEXT-DECORATION-STYLE: INITIAL; TEXT-DECORATION-COLOR: INITIAL; DISPLAY: INLINE !IMPORTANT; FLOAT: NONE;'>CAMPAIGN_ID > 5</SPAN>`,
+      'IF:<SPAN STYLE=\'COLOR: RGB(0, 0, 0); FONT-FAMILY: "TIMES NEW ROMAN"; FONT-SIZE: MEDIUM; FONT-STYLE: NORMAL; FONT-VARIANT-LIGATURES: NORMAL; FONT-VARIANT-CAPS: NORMAL; FONT-WEIGHT: 400; LETTER-SPACING: NORMAL; ORPHANS: 2; TEXT-ALIGN: START; TEXT-INDENT: 0PX; TEXT-TRANSFORM: NONE; WHITE-SPACE: NORMAL; WIDOWS: 2; WORD-SPACING: 0PX; -WEBKIT-TEXT-STROKE-WIDTH: 0PX; TEXT-DECORATION-STYLE: INITIAL; TEXT-DECORATION-COLOR: INITIAL; DISPLAY: INLINE !IMPORTANT; FLOAT: NONE;\'>CAMPAIGN_ID > 5</SPAN>',
       consts.VALIDATION_COND_MSG,
     )];
 
@@ -240,6 +239,19 @@ describe('General Validation Tests', () => {
       }
   );
 */
+
+  // dateime
+  const format = `${datetimeHelper.dateFormats.M2}/${datetimeHelper.dateFormats.d2}/${datetimeHelper.dateFormats.y4}`;
+  const dateKey = `${datetimeHelper.DateTags[0]}${consts.LOGICAL_CONDITION_DELIMITER}${format}`;
+  inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${consts.CUSTOM_OPEN_DELIMITER}${dateKey}${consts.CUSTOM_CLOSE_DELIMITER}  ${consts.OP_GT}'01/01/2013'${consts.CUSTOM_CLOSE_DELIMITER}
+      We're after 2013 ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}  `;
+  const dateVals = [String.raw`01/01/2017`, String.raw`01/27/2017`, String.raw`12/12/2017`];
+  dateVals.forEach((value) => {
+    const tstMsg = `Datetime Tst - key: ${dateKey} val: ${value}`;
+    const dateAttrs = { [dateKey]: value };
+    addToValidationTests(tstMsg, inputStr, [], dateAttrs);
+    addToValidationTests(`${tstMsg} - including fallback block`, `${inputStr} ${consts.CUSTOM_ELSE_BLOCK_TAG} We're after 2013 ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`, [], dateAttrs);
+  });
   // todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
 
   /*
