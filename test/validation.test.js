@@ -242,21 +242,29 @@ describe('General Validation Tests', () => {
 
   // dateime
   const format = `${datetimeHelper.dateFormats.M2}/${datetimeHelper.dateFormats.d2}/${datetimeHelper.dateFormats.y4}`;
-  const dateKey = `${datetimeHelper.DateTags[0]}${consts.LOGICAL_CONDITION_DELIMITER}${format}`;
-  inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${consts.CUSTOM_OPEN_DELIMITER}${dateKey}${consts.CUSTOM_CLOSE_DELIMITER}  ${consts.OP_GT}'01/01/2013'${consts.CUSTOM_CLOSE_DELIMITER}
-      We're after 2013 ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}  `;
+  const datetimeKey = `${datetimeHelper.DateTags[0]}${consts.LOGICAL_CONDITION_DELIMITER}${format}`;
+  const keys = [datetimeKey, `${consts.CUSTOM_OPEN_DELIMITER}${datetimeKey}${consts.CUSTOM_CLOSE_DELIMITER}`];
   const dateVals = [String.raw`01/01/2017`, String.raw`01/27/2017`, String.raw`12/12/2017`];
-  dateVals.forEach((value) => {
-    const tstMsg = `Datetime Tst - key: ${dateKey} val: ${value}`;
-    const dateAttrs = { [dateKey]: value };
-    addToValidationTests(tstMsg, inputStr, [], dateAttrs);
-    addToValidationTests(`${tstMsg} - including fallback block`, `${inputStr} ${consts.CUSTOM_ELSE_BLOCK_TAG} We're after 2013 ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`, [], dateAttrs);
+  keys.forEach((key) => {
+    dateVals.forEach((value) => {
+      consts.LEGAL_OPERATORS.forEach((op) => {
+        inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${key}  ${op}'01/01/2013'${consts.CUSTOM_CLOSE_DELIMITER}
+      We're after 2013 ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}  `;
+        const tstMsg = `Datetime Tst - key: ${key} op: ${op} val: ${value}`;
+        const dateAttrs = { [datetimeKey]: value }; // Inserting the key without brackets - the test function will check both scenarios
+        addToValidationTests(tstMsg, inputStr, [], dateAttrs);
+        addToValidationTests(`${tstMsg} - including fallback block`, `${inputStr} ${consts.CUSTOM_ELSE_BLOCK_TAG} We're after 2013 ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`, [], dateAttrs);
+      });
+    });
   });
+
   // todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
 
   /*
-  // DateTime - non-explicit tags
-  const datetimeKey = 'datetimeAttr';
+
+  / DateTime - non-explicit tags
+
+  onst datetimeKey = 'datetimeAttr';
   const datetimeVal1 = moment();
   const formatter = new CondFormatter();
 */
