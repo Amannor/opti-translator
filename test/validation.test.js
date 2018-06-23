@@ -241,22 +241,38 @@ describe('General Validation Tests', () => {
 */
 
   // dateime
-  const format = `${datetimeHelper.dateFormats.M2}/${datetimeHelper.dateFormats.d2}/${datetimeHelper.dateFormats.y4}`;
-  const datetimeKey = `${datetimeHelper.DateTags[0]}${consts.LOGICAL_CONDITION_DELIMITER}${format}`;
-  const keys = [datetimeKey, `${consts.CUSTOM_OPEN_DELIMITER}${datetimeKey}${consts.CUSTOM_CLOSE_DELIMITER}`];
+  let format = `${datetimeHelper.dateFormats.M2}/${datetimeHelper.dateFormats.d2}/${datetimeHelper.dateFormats.y4}`;
+  let datetimeKey = `${datetimeHelper.DateTags[0]}${consts.LOGICAL_CONDITION_DELIMITER}${format}`;
+  let keys = [datetimeKey, `${consts.CUSTOM_OPEN_DELIMITER}${datetimeKey}${consts.CUSTOM_CLOSE_DELIMITER}`];
   const dateVals = [String.raw`01/01/2017`, String.raw`01/27/2017`, String.raw`12/12/2017`];
   keys.forEach((key) => {
     dateVals.forEach((value) => {
       consts.LEGAL_OPERATORS.forEach((op) => {
-        inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${key}  ${op}'01/01/2013'${consts.CUSTOM_CLOSE_DELIMITER}
-      We're after 2013 ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}  `;
+        inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${key}  ${op}'01/01/2013'${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}  `;
         const tstMsg = `Datetime Tst - key: ${key} op: ${op} val: ${value}`;
         const dateAttrs = { [datetimeKey]: value }; // Inserting the key without brackets - the test function will check both scenarios
         addToValidationTests(tstMsg, inputStr, [], dateAttrs);
-        addToValidationTests(`${tstMsg} - including fallback block`, `${inputStr} ${consts.CUSTOM_ELSE_BLOCK_TAG} We're after 2013 ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`, [], dateAttrs);
+        addToValidationTests(`${tstMsg} - including fallback block`, `${inputStr} ${consts.CUSTOM_ELSE_BLOCK_TAG} Fallback ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`, [], dateAttrs);
       });
     });
   });
+
+  format = `${datetimeHelper.timeFormats.H2}:${datetimeHelper.timeFormats.m2}`;
+  datetimeKey = `${datetimeHelper.TimeTags[0]}${consts.LOGICAL_CONDITION_DELIMITER}${format}`;
+  const timeVals = [String.raw`17:34`, String.raw`10:00`, String.raw`00:00`, String.raw`23:59`];
+  keys = [datetimeKey, `${consts.CUSTOM_OPEN_DELIMITER}${datetimeKey}${consts.CUSTOM_CLOSE_DELIMITER}`];
+  keys.forEach((key) => {
+    timeVals.forEach((value) => {
+      consts.LEGAL_OPERATORS.forEach((op) => {
+        inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${key}  ${op}'15:44'${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}  `;
+        const tstMsg = `Datetime Tst - key: ${key} op: ${op} val: ${value}`;
+        const timeAttrs = { [datetimeKey]: value }; // Inserting the key without brackets - the test function will check both scenarios
+        addToValidationTests(tstMsg, inputStr, [], timeAttrs);
+        addToValidationTests(`${tstMsg} - including fallback block`, `${inputStr} ${consts.CUSTOM_ELSE_BLOCK_TAG}Fallback ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`, [], timeAttrs);
+      });
+    });
+  });
+
 
   // todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
 
