@@ -273,7 +273,11 @@ describe('General Validation Tests', () => {
     });
   });
 
-
+  /*
+  inputStr = `[%IF:[%CURRENT_TIME:TIME_FORMAT%] >= '11:30 PM'%] After 11:30 PM [%END:IF%]`;
+  const literalAttrs = { 'CURRENT_TIME:TIME_FORMAT' : '10:40 AM'};
+  addToValidationTests('Literal tst default (explicit) time format', inputStr, [], literalAttrs);
+ */
   // todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
 
   /*

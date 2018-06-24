@@ -80,7 +80,7 @@ describe('General Translator Tests', () => {
   const inputPageExistenceTst = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${FAV_PROD_KEY}${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.favProductExistenceText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
     ${consts.CUSTOM_ELSE_BLOCK_TAG} ${sectionsPerValue.favProductNonExistenceText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
   const inputObjForExistenceTst = { [tstConsts.INPUT_KEY]: inputPageExistenceTst, [consts.ATTRIBUTES_KEY_STR]: { [FAV_PROD_KEY]: 'Lorem ipsum prod' } };
-  addToTestCases(inputObjForExistenceTst, sectionsPerValue.favProductExistenceText, `Existence tst - ket (${FAV_PROD_KEY}) exists`);
+  addToTestCases(inputObjForExistenceTst, sectionsPerValue.favProductExistenceText, `Existence tst - key (${FAV_PROD_KEY}) exists`);
 
   // orders
   const inputPageOrders = `
@@ -313,6 +313,16 @@ describe('General Translator Tests', () => {
   const resStr = 'Hi [%FIRST_NAME%]    ======          Special offer sent to your email                  =======    Click here [%UNSUB%] to unsubscribe        ';
   const inputObjForLiteralTst2 = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { EMAIL: 'literalTst2@optimove.com' } };
   addToTestCases(inputObjForLiteralTst2, resStr, 'Literal test2');
+
+  // Existence - whitespace
+  const key = 'A';
+  [key, `[%${key}%]`].forEach((curKey) => {
+    inputStr = `[%IF: ${curKey} %]Lorem[%END  : IF%] [%  ELSE%]Ipsum[%END:IF%]`;
+    const inputObjExistenceWSTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { A: 'asas' } };
+    addToTestCases(inputObjExistenceWSTst, 'Lorem', `Existence Tst with WS key: ${curKey} - value exists`);
+    const inputObjExistenceWSTst2 = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { A: '' } };
+    addToTestCases(inputObjExistenceWSTst2, 'Ipsum', `Existence Tst with WS key: ${curKey} - value doesn't exist`);
+  });
 
   /* - TODO make time test work
     const curTimeKey = datetimeHelper.TimeTags[0];
