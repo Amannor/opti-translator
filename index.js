@@ -2,7 +2,7 @@
   const ejsTranslator = require('./lib/ejsTranslator');
 
   function preprocessInputStr(inputStr) {
-    const  ifRegex = String.raw`\[%\s*IF\s*:\s*\S+\s*\S+\s*\S+\s*%\]`;
+    const ifRegex = String.raw`\[%\s*IF\s*:\s*\S+\s*\S+\s*\S+\s*%\]`;
     const ifRegexSingleTerm = String.raw`\[%\s*IF\s*:\s*\S+\s*%\]`;
     const elseifRegex = String.raw`\[%\s*ELSEIF\s*:\s*\S+\s*\S+\s*\S+\s*%\]`;
     const elseifRegexSingleTerm = String.raw`\[%\s*IF\s*:\s*\S+\s*%\]`;
