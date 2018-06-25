@@ -258,17 +258,19 @@ describe('General Validation Tests', () => {
   });
 
   format = `${datetimeHelper.timeFormats.H2}:${datetimeHelper.timeFormats.m2}`;
-  datetimeKey = `${datetimeHelper.TimeTags[0]}${consts.LOGICAL_CONDITION_DELIMITER}${format}`;
   const timeVals = [String.raw`17:34`, String.raw`10:00`, String.raw`00:00`, String.raw`23:59`];
-  keys = [datetimeKey, `${consts.CUSTOM_OPEN_DELIMITER}${datetimeKey}${consts.CUSTOM_CLOSE_DELIMITER}`];
-  keys.forEach((key) => {
-    timeVals.forEach((value) => {
-      consts.LEGAL_OPERATORS.forEach((op) => {
-        inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${key}  ${op}'15:44'${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}  `;
-        const tstMsg = `Datetime Tst - key: ${key} op: ${op} val: ${value}`;
-        const timeAttrs = { [datetimeKey]: value }; // Inserting the key without brackets - the test function will check both scenarios
-        addToValidationTests(tstMsg, inputStr, [], timeAttrs);
-        addToValidationTests(`${tstMsg} - including fallback block`, `${inputStr} ${consts.CUSTOM_ELSE_BLOCK_TAG}Fallback ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`, [], timeAttrs);
+  datetimeHelper.TimeTags.forEach((timeTag) => {
+    datetimeKey = `${timeTag}${consts.LOGICAL_CONDITION_DELIMITER}${format}`;
+    keys = [datetimeKey, `${consts.CUSTOM_OPEN_DELIMITER}${datetimeKey}${consts.CUSTOM_CLOSE_DELIMITER}`];
+    keys.forEach((key) => {
+      timeVals.forEach((value) => {
+        consts.LEGAL_OPERATORS.forEach((op) => {
+          inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${key}  ${op}'15:44'${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}  `;
+          const tstMsg = `Datetime Tst - key: ${key} op: ${op} val: ${value}`;
+          const timeAttrs = { [datetimeKey]: value }; // Inserting the key without brackets - the test function will check both scenarios
+          addToValidationTests(tstMsg, inputStr, [], timeAttrs);
+          addToValidationTests(`${tstMsg} - including fallback block`, `${inputStr} ${consts.CUSTOM_ELSE_BLOCK_TAG}Fallback ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`, [], timeAttrs);
+        });
       });
     });
   });
@@ -281,7 +283,9 @@ describe('General Validation Tests', () => {
         consts.LEGAL_OPERATORS.forEach((op) => {
           inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curTimeKey} ${op} '11:30 PM'%] After 11:30 PM ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
           const literalAttrs = { [curTimeTerm]: '10:40 AM' };
-          addToValidationTests(`Default time formats tst Key: ${curTimeKey} op: ${op}`, inputStr, [], literalAttrs);
+          const tstMsg = `Default time formats tst Key: ${curTimeKey} op: ${op}`;
+          addToValidationTests(tstMsg, inputStr, [], literalAttrs);
+          addToValidationTests(`${tstMsg} - including fallback block`, `${inputStr} ${consts.CUSTOM_ELSE_BLOCK_TAG}Fallback ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`, [], literalAttrs);
         });
       });
     });
