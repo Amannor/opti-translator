@@ -277,15 +277,33 @@ describe('General Validation Tests', () => {
     });
   });
 
+  // Time - default format
   const timeFormatSuffixes = ['', `${consts.LOGICAL_CONDITION_DELIMITER}TIME_FORMAT`];
   timeFormatSuffixes.forEach((suffix) => {
     datetimeHelper.TimeTags.forEach((timeTag) => {
       const curTimeTerm = `${timeTag}${suffix}`;
       [curTimeTerm, `${consts.CUSTOM_OPEN_DELIMITER}${curTimeTerm}${consts.CUSTOM_CLOSE_DELIMITER}`].forEach((curTimeKey) => {
         consts.LEGAL_OPERATORS.forEach((op) => {
-          inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curTimeKey} ${op} '11:30 PM'%] After 11:30 PM ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+          inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curTimeKey} ${op} '11:30 PM'${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
           const literalAttrs = { [curTimeTerm]: '10:40 AM' };
           const tstMsg = `Default time formats tst Key: ${curTimeKey} op: ${op}`;
+          addToValidationTests(tstMsg, inputStr, [], literalAttrs);
+          addToValidationTests(`${tstMsg} - including fallback block`, `${inputStr} ${consts.CUSTOM_ELSE_BLOCK_TAG}Fallback ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`, [], literalAttrs);
+        });
+      });
+    });
+  });
+
+  // Date - default format
+  const dateFormatSuffixes = ['', `${consts.LOGICAL_CONDITION_DELIMITER}DATE_FORMAT`];
+  dateFormatSuffixes.forEach((suffix) => {
+    datetimeHelper.DateTags.forEach((dateTag) => {
+      const curDateTerm = `${dateTag}${suffix}`;
+      [curDateTerm, `${consts.CUSTOM_OPEN_DELIMITER}${curDateTerm}${consts.CUSTOM_CLOSE_DELIMITER}`].forEach((curDateKey) => {
+        consts.LEGAL_OPERATORS.forEach((op) => {
+          inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curDateKey} ${op} '1999-10-28'${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+          const literalAttrs = { [curDateTerm]: '2015-01-01' };
+          const tstMsg = `Default date formats tst Key: ${curDateKey} op: ${op}`;
           addToValidationTests(tstMsg, inputStr, [], literalAttrs);
           addToValidationTests(`${tstMsg} - including fallback block`, `${inputStr} ${consts.CUSTOM_ELSE_BLOCK_TAG}Fallback ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`, [], literalAttrs);
         });
