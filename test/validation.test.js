@@ -273,11 +273,20 @@ describe('General Validation Tests', () => {
     });
   });
 
-  /*
-  inputStr = `[%IF:[%CURRENT_TIME:TIME_FORMAT%] >= '11:30 PM'%] After 11:30 PM [%END:IF%]`;
-  const literalAttrs = { 'CURRENT_TIME:TIME_FORMAT' : '10:40 AM'};
-  addToValidationTests('Literal tst default (explicit) time format', inputStr, [], literalAttrs);
- */
+  const timeFormatSuffixes = ['', `${consts.LOGICAL_CONDITION_DELIMITER}TIME_FORMAT`];
+  timeFormatSuffixes.forEach((suffix) => {
+    datetimeHelper.TimeTags.forEach((timeTag) => {
+      const curTimeTerm = `${timeTag}${suffix}`;
+      [curTimeTerm, `${consts.CUSTOM_OPEN_DELIMITER}${curTimeTerm}${consts.CUSTOM_CLOSE_DELIMITER}`].forEach((curTimeKey) => {
+        consts.LEGAL_OPERATORS.forEach((op) => {
+          inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curTimeKey} ${op} '11:30 PM'%] After 11:30 PM ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+          const literalAttrs = { [curTimeTerm]: '10:40 AM' };
+          addToValidationTests(`Default time formats tst Key: ${curTimeKey} op: ${op}`, inputStr, [], literalAttrs);
+        });
+      });
+    });
+  });
+
   // todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
 
   /*
