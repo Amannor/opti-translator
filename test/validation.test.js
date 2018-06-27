@@ -311,6 +311,25 @@ describe('General Validation Tests', () => {
     });
   });
 
+    inputStr = `Txt#1 [%IF: TRANS:AGE > 10%] Over 10 yo [%END:IF%]
+
+    [%ELSEIF:UPPER:TRANS:LAST_NAME !='asdasdas'%] This txt should appear [%END:IF%]
+
+    [%IF:CURRENT_TIME:TIME_FORMAT >= '11:30 PM'%] After 11:30 PM [%END:IF%]
+
+    [%ELSE%] Not after 11:30 PM [%END:IF%]
+
+    [%IF: TOMORROW_DATE:dd/MM/yyyy<'25/08/1950'%] This Txt should appear #2 [%END:IF%]
+
+    [%IF: CURRENT_DATE:yyyy-MM!='2018-06'%]We're not in June 2018 [%END:IF%] 
+
+        [%ELSEIF:TRANS:LAST_NAME%] TRANS:LAST_NAME supplied [%END:IF%] [%ELSE%] Txt #3 [%END:IF%]
+    sdfsdfTxt #4`;
+
+    const literalAttrsObj = {"[%TRANS:AGE%]":"57", "UPPER:TRANS:LAST_NAME ":"","CURRENT_TIME:TIME_FORMAT ":"07:06 am"," TOMORROW_DATE:dd/MM/yyyy":"28/06/2018"," CURRENT_DATE:yyyy-MM":"2018-06","TRANS:LAST_NAME":""};
+
+    addToValidationTests('Literal tst datetime', inputStr, [], literalAttrsObj);
+
   // todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
 
   /*

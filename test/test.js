@@ -120,8 +120,7 @@ describe('General Translator Tests', () => {
   });
 
   const inputPageOrdersNoElse3 =
-        `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}>=0${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.orderNNText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
-         ${consts.CUSTOM_ELSE_BLOCK_TAG} ${sectionsPerValue.orderNText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+        `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}>=0${consts.CUSTOM_CLOSE_DELIMITER} ${sectionsPerValue.orderNNText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG} ${consts.CUSTOM_ELSE_BLOCK_TAG} ${sectionsPerValue.orderNText} ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
   possibleOrderVals.forEach((orderVal) => {
     const OrderValAttrs = { [ORDER_KEY]: orderVal };
     const inputObj = { [tstConsts.INPUT_KEY]: inputPageOrdersNoElse3, [consts.ATTRIBUTES_KEY_STR]: OrderValAttrs };
@@ -138,7 +137,7 @@ describe('General Translator Tests', () => {
     const OrdersCorrectResult1 = orderVal <= 200 ? sectionsPerValue.orderLTOE200Text : '';
     const OrdersCorrectResult2 = orderVal >= 0 ? sectionsPerValue.orderNNText :
       sectionsPerValue.orderNText;
-    addToTestCases(inputObj, `${OrdersCorrectResult1}  ${OrdersCorrectResult2}`, `should return string  (compound no else)  according to order value: ${orderVal}`);
+    addToTestCases(inputObj, `${OrdersCorrectResult1} ${OrdersCorrectResult2}`, `should return string  (compound no else)  according to order value: ${orderVal}`);
   });
 
   // Whitespace #1
@@ -324,6 +323,14 @@ describe('General Translator Tests', () => {
     addToTestCases(inputObjExistenceWSTst2, 'Ipsum', `Existence Tst with WS key: ${curKey} - value doesn't exist`);
   });
 
+
+  inputStr = 'A[%IF:X==1%]B[%END:IF%]C[%ELSE%]D[%END:IF%]E';
+  const inputObjMiddleTxtTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { X: 1 } };
+  addToTestCases(inputObjMiddleTxtTst, 'ABCE', 'MiddleTxt 1');
+
+    inputStr = 'A[%IF:X==1%]B[%END:IF%]C[%ELSE%]D[%END:IF%]E';
+    const inputObjMiddleTxtTst2 = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: {x: 2} };
+    addToTestCases(inputObjMiddleTxtTst2, 'ACDE', 'MiddleTxt 2');
   /* - TODO make time test work
     const curTimeKey = datetimeHelper.TimeTags[0];
     inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curTimeKey}${consts.OP_GT}'08:19 AM'${consts.CUSTOM_CLOSE_DELIMITER}
