@@ -136,8 +136,8 @@ describe('General Translator Tests', () => {
     const inputObj = { [tstConsts.INPUT_KEY]: inputPageOrdersNoElse4, [consts.ATTRIBUTES_KEY_STR]: OrderValAttrs };
     const OrdersCorrectResult1 = orderVal <= 200 ? sectionsPerValue.orderLTOE200Text : '';
     const OrdersCorrectResult2 = orderVal >= 0 ? sectionsPerValue.orderNNText :
-      sectionsPerValue.orderNText;
-    addToTestCases(inputObj, `${OrdersCorrectResult1} ${OrdersCorrectResult2}`, `should return string  (compound no else)  according to order value: ${orderVal}`);
+      ` ${sectionsPerValue.orderNText}`;
+    addToTestCases(inputObj, `${OrdersCorrectResult1}   ${OrdersCorrectResult2}`, `should return string  (compound no else) according to order value: ${orderVal}`);
   });
 
   // Whitespace #1
@@ -308,8 +308,8 @@ describe('General Translator Tests', () => {
   addToTestCases(inputObjForLiteralTst, `${inputPrefix}Msg only for Alon\n\n`, 'Literal test');
 
 
-  inputStr = 'Hi [%FIRST_NAME%]    ======    [%IF:[%EMAIL%]==\'roman_y@optimove.com\'%]      Специальное предложение отправлено на адрес Романа        Special offer sent to Roman\'s email                  [%END:IF%]    [%ELSEIF:EMAIL==\'haimi_g@optimove.com\'%]      Oferta especial enviada al correo electrónico de Haimi              [%END:IF%]    [%ELSEIF:EMAIL==\'inna_o@optimove.com\'%]      Special offer sent to Inna\'s email              [%END:IF%]    [%ELSEIF:EMAIL==\'itay_t@optimove.com\'%]      Special offer sent to Itay\'s email              [%END:IF%]    [%ELSEIF:EMAIL==\'omer_p@optimove.com\'%]      Special offer sent to Omer\'s email                    [%END:IF%]      [%ELSEIF:EMAIL==\'valeriia_v@optimove.com\'%]      Special offer sent to Valeriia\'s email          [%END:IF%]        [%ELSE%]      Special offer sent to your email              [%END:IF%]    =======    Click here [%UNSUB%] to unsubscribe        ';
-  const resStr = 'Hi [%FIRST_NAME%]    ======          Special offer sent to your email                  =======    Click here [%UNSUB%] to unsubscribe        ';
+  inputStr =     'Hi [%FIRST_NAME%]    ======    [%IF:[%EMAIL%]==\'roman_y@optimove.com\'%]      Специальное предложение отправлено на адрес Романа        Special offer sent to Roman\'s email                  [%END:IF%]    [%ELSEIF:EMAIL==\'haimi_g@optimove.com\'%]      Oferta especial enviada al correo electrónico de Haimi              [%END:IF%]    [%ELSEIF:EMAIL==\'inna_o@optimove.com\'%]      Special offer sent to Inna\'s email              [%END:IF%]    [%ELSEIF:EMAIL==\'itay_t@optimove.com\'%]      Special offer sent to Itay\'s email              [%END:IF%]    [%ELSEIF:EMAIL==\'omer_p@optimove.com\'%]      Special offer sent to Omer\'s email                    [%END:IF%]      [%ELSEIF:EMAIL==\'valeriia_v@optimove.com\'%]      Special offer sent to Valeriia\'s email          [%END:IF%]        [%ELSE%]      Special offer sent to your email              [%END:IF%]    =======    Click here [%UNSUB%] to unsubscribe        ';
+  const resStr = 'Hi [%FIRST_NAME%]    ======                                        Special offer sent to your email                  =======    Click here [%UNSUB%] to unsubscribe        ';
   const inputObjForLiteralTst2 = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { EMAIL: 'literalTst2@optimove.com' } };
   addToTestCases(inputObjForLiteralTst2, resStr, 'Literal test2');
 
