@@ -349,6 +349,19 @@ describe('General Translator Tests', () => {
   const inputObjWSInVal2 = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { NAME: 'A M' } };
   addToTestCases(inputObjWSInVal2, ' X ', 'White spaces in String literal value tst - clause variable in brackets');
 
+  const whitespaceInVal_variable = 'CYCLE_STAGE';
+  const whitespaceInVal_val = 'Non Despositor';
+  const positiveRes = '\nLorem\n';
+  const negativeRes = '\nIpsum\n';
+  [whitespaceInVal_variable, `${consts.CUSTOM_OPEN_DELIMITER}${whitespaceInVal_variable}${consts.CUSTOM_CLOSE_DELIMITER}`].forEach((curVariable) => {
+    inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curVariable}${consts.OP_EQ}'${whitespaceInVal_val}'${consts.CUSTOM_CLOSE_DELIMITER}${positiveRes}${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}\n${consts.CUSTOM_ELSE_BLOCK_TAG}${negativeRes}${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+    [whitespaceInVal_val, 'sdfsdf'].forEach((curValue) => {
+      const inputObjWSInVal3 = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [whitespaceInVal_variable]: curValue } };
+      const expectedResult = curValue === whitespaceInVal_val ? positiveRes : negativeRes;
+      addToTestCases(inputObjWSInVal3, expectedResult, `White spaces in String literal value. curVar: ${curVariable} curVale: ${curValue}`);
+    });
+  });
+
   /* - TODO make time test work
     const curTimeKey = datetimeHelper.TimeTags[0];
     inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curTimeKey}${consts.OP_GT}'08:19 AM'${consts.CUSTOM_CLOSE_DELIMITER}
