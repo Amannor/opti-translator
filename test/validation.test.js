@@ -326,7 +326,7 @@ describe('General Validation Tests', () => {
         [%ELSEIF:TRANS:LAST_NAME%] TRANS:LAST_NAME supplied [%END:IF%] [%ELSE%] Txt #3 [%END:IF%]
     sdfsdfTxt #4`;
 
-    const literalAttrsObj = {"[%TRANS:AGE%]":"57", "UPPER:TRANS:LAST_NAME ":"","CURRENT_TIME:TIME_FORMAT ":"07:06 am"," TOMORROW_DATE:dd/MM/yyyy":"28/06/2018"," CURRENT_DATE:yyyy-MM":"2018-06","TRANS:LAST_NAME":""};
+    const literalAttrsObj = {"[%TRANS:AGE%]":"57", "UPPER:TRANS:LAST_NAME":"","CURRENT_TIME:TIME_FORMAT":"07:06 am"," TOMORROW_DATE:dd/MM/yyyy":"28/06/2018"," CURRENT_DATE:yyyy-MM":"2018-06","TRANS:LAST_NAME":""};
 
     addToValidationTests('Literal tst datetime', inputStr, [], literalAttrsObj);
 

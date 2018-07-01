@@ -43,7 +43,7 @@ const consts = require('./lib/consts.js');
         if (clauseParts.length === 3) {
           preprocessedInput += [clauseParts[0].replace(/\s/g, ''), clauseParts[1], clauseParts[2].replace(/\s/g, '')].join("'");
         } else {
-          preprocessedInput += clause;
+          preprocessedInput += clause.replace(/\s/g, '');
         }
       }
       const inputStrNextIndex = (clauseEndIndex < 0 || clauseEndIndex === inputStr.length - 1) ? inputStr.length - 1 : clauseEndIndex;
