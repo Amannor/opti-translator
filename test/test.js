@@ -310,7 +310,6 @@ describe('General Translator Tests', () => {
 
   inputStr = 'Hi [%FIRST_NAME%]    ======    [%IF:[%EMAIL%]==\'roman_y@optimove.com\'%]      Специальное предложение отправлено на адрес Романа        Special offer sent to Roman\'s email                  [%END:IF%]    [%ELSEIF:EMAIL==\'haimi_g@optimove.com\'%]      Oferta especial enviada al correo electrónico de Haimi              [%END:IF%]    [%ELSEIF:EMAIL==\'inna_o@optimove.com\'%]      Special offer sent to Inna\'s email              [%END:IF%]    [%ELSEIF:EMAIL==\'itay_t@optimove.com\'%]      Special offer sent to Itay\'s email              [%END:IF%]    [%ELSEIF:EMAIL==\'omer_p@optimove.com\'%]      Special offer sent to Omer\'s email                    [%END:IF%]      [%ELSEIF:EMAIL==\'valeriia_v@optimove.com\'%]      Special offer sent to Valeriia\'s email          [%END:IF%]        [%ELSE%]      Special offer sent to your email              [%END:IF%]    =======    Click here [%UNSUB%] to unsubscribe        ';
   const resStr = 'Hi [%FIRST_NAME%]    ======                                        Special offer sent to your email                  =======    Click here [%UNSUB%] to unsubscribe        ';
-//const resStr = 'Hi [%FIRST_NAME%]    ======                                        Special offer sent to your email                  =======    Click here [%UNSUB%] to unsubscribe        ';
   const inputObjForLiteralTst2 = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { EMAIL: 'literalTst2@optimove.com' } };
   addToTestCases(inputObjForLiteralTst2, resStr, 'Literal test2');
 
@@ -341,7 +340,7 @@ describe('General Translator Tests', () => {
   const inputObjMiddleTxtTst4 = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { X: 'Z' } };
   addToTestCases(inputObjMiddleTxtTst4, 'ACDE', 'MiddleTxt 4');
 
-  /*
+
   inputStr = "[%IF:NAME == 'A M' %] X [%END:IF%]";
   const inputObjWSInVal = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { NAME: 'A M' } };
   addToTestCases(inputObjWSInVal, ' X ', 'White spaces in String literal value tst');
@@ -349,7 +348,7 @@ describe('General Translator Tests', () => {
   inputStr = "[%IF:[%NAME%] == 'A M' %] X [%END:IF%]";
   const inputObjWSInVal2 = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { NAME: 'A M' } };
   addToTestCases(inputObjWSInVal2, ' X ', 'White spaces in String literal value tst - clause variable in brackets');
-*/
+
   /* - TODO make time test work
     const curTimeKey = datetimeHelper.TimeTags[0];
     inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curTimeKey}${consts.OP_GT}'08:19 AM'${consts.CUSTOM_CLOSE_DELIMITER}
