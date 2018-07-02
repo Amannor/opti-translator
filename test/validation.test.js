@@ -129,7 +129,7 @@ describe('General Validation Tests', () => {
 
   inputStr = `${inputStr} ${inputStr} ${inputStr}`;
   const maxAllowedCondBlocksNum = 2;
-  const validationMsg = `${consts.VALIDATION_BLOCK_MSG}: block #${maxAllowedCondBlocksNum + 1} exceeds max number of allowed blocks: ${maxAllowedCondBlocksNum}`;
+  const validationMsg = `${consts.VALIDATION_BLOCK_MSG}: Too many condition blocks (may include up to ${maxAllowedCondBlocksNum} blocks)`;
   res = new ValidationResult(
     maxAllowedCondBlocksNum, consts.VALIDATION_START_INDEX,
     `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}>200${consts.CUSTOM_CLOSE_DELIMITER}`, validationMsg,
