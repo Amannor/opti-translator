@@ -238,21 +238,6 @@ describe('General Validation Tests', () => {
 
   addToValidationTests('Literal Tst - checking general translation error', inputStr, errors, attrs, 10, 10, areValidationResultsEqual_generalErrorsAdapter);
 
-  /*
-  const isCustomer1StrA = `              <!--BEGIN ec_Ad-->              <a href="https://www.TXElectric.com/buy-package?utm_source=optimove&utm_medium=newsletter&utm_campaign=optimove_n_oa_all_dailynewsletter-[%LOWER:LAST_PROMO_SENT%]&utm_term=[%CURRENT_DATE:yyyyMMdd%]" style="text-decoration:none;" target="_blank"><img src="http://news.TXElectric.com/newsletter/ec_ads/ec_a_[%LOWER:LAST_PROMO_SENT%].jpg?v=[%CURRENT_DATE:yyyyMMdd%]" alt="Get Answers Today" border="0" style="font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;overflow:hidden;mso-line-height-rule:exactly;line-height:1px;width:100%;height:auto;display:block;" class="fr-draggable"></a>              <!--END ec_Ad-->`;
-  const isCustomerNot1StrA = `              <!--BEGIN subAd-->              <a href="https://www.TXElectric.com/psychic-readings?utm_source=optimove&utm_medium=newsletter&utm_campaign=optimove_n_oa_all_dailynewsletter-nonc-[%NEWS_NON_CUSTOMER_DAY%]&utm_term=[%CURRENT_DATE:yyyyMMdd%]" style="text-decoration:none;" target="_blank"><img src="http://news.TXElectric.com/newsletter/sub_ads/[%NEWS_NON_CUSTOMER_DAY%]_a_300nl.jpg?v=[%CURRENT_DATE:yyyyMMdd%]" alt="Get Answers Today" border="0" style="font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;overflow:hidden;mso-line-height-rule:exactly;line-height:1px;width:100%;height:auto;display:block;" class="fr-draggable"></a>              <!--END subAd-->`;
-  const middleStr = ` </td>             <td align="center" style="padding:0 0 0 0;margin:0 0 0 0;max-width:300px;" valign="top" width="300"> `;
-  const isCustomer1StrB = `              <!--BEGIN ec_Ad-->              <a href="https://www.TXElectric.com/buy-package?utm_source=optimove&utm_medium=newsletter&utm_campaign=optimove_n_oa_all_dailynewsletter-[%LOWER:LAST_PROMO_SENT%]&utm_term=[%CURRENT_DATE:yyyyMMdd%]" style="text-decoration:none;" target="_blank"><img src="http://news.TXElectric.com/newsletter/ec_ads/ec_b_[%LOWER:LAST_PROMO_SENT%].jpg?v=[%CURRENT_DATE:yyyyMMdd%]" alt="Start Now" border="0" style="font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;overflow:hidden;mso-line-height-rule:exactly;line-height:1px;width:100%;height:auto;display:block;" class="fr-draggable"></a>              <!--END ec_Ad-->`;
- const isCustomerNot1StrB = `              <!--BEGIN subAd-->              <a href="https://www.TXElectric.com/psychic-readings?utm_source=optimove&utm_medium=newsletter&utm_campaign=optimove_n_oa_all_dailynewsletter-nonc-[%NEWS_NON_CUSTOMER_DAY%]&utm_term=[%CURRENT_DATE:yyyyMMdd%]" style="text-decoration:none;" target="_blank"><img src="http://news.TXElectric.com/newsletter/sub_ads/[%NEWS_NON_CUSTOMER_DAY%]_b_300nl.jpg?v=[%CURRENT_DATE:yyyyMMdd%]" alt="Start Now" border="0" style="font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;overflow:hidden;mso-line-height-rule:exactly;line-height:1px;width:100%;height:auto;display:block;" class="fr-draggable"></a>              <!--END subAd-->`;
-  inputStr = `[%IF:IS_CUSTOMER==1%]${isCustomer1StrA}[%END:IF%] [%ELSE%]${isCustomerNot1StrA}[%END:IF%]${middleStr}[%IF:IS_CUSTOMER==1%]${isCustomer1StrB}[%END:IF%] [%ELSE%]${isCustomerNot1StrB}[%END:IF%]`;
-  const isCustomerVals = [0, 1];
-  isCustomerVals.forEach(
-      value =>
-      {
-
-      }
-  );
-*/
 
   // dateime
   let format = `${datetimeHelper.dateFormats.M2}/${datetimeHelper.dateFormats.d2}/${datetimeHelper.dateFormats.y4}`;
@@ -346,6 +331,65 @@ describe('General Validation Tests', () => {
 
   addToValidationTests('Literal tst datetime', inputStr, [], literalAttrsObj);
 
+  inputStr =
+   `EMAIL: [%EMAIL%]
+    CURRENT_TIME [%CURRENT_TIME%]
+    CURRENT_TIME:HH [%CURRENT_TIME:HH%]
+    CURRENT_TIME:hh [%CURRENT_TIME:hh%]
+    CURRENT_TIME:mm [%CURRENT_TIME:mm%]
+    CURRENT_TIME:tt [%CURRENT_TIME:tt%]
+    CURRENT_TIME:TT [%CURRENT_TIME:TT%]
+    [%IF:[%CURRENT_TIME:HH%] <23%]
+    dfgsdfsf
+        [%END:IF%]
+    [%IF:[%CURRENT_DATE:dd%] >=23%]
+    dfgsdfsf
+        [%END:IF%]
+
+
+
+
+
+
+    CURRENT_DATE [%CURRENT_DATE%]
+    CURRENT_DATE:yyyy [%CURRENT_DATE:yyyy%]
+    TOMORROW_DATE:dd [%TOMORROW_DATE:dd%]
+
+
+    TOMORROW_DATE:dddd [%TOMORROW_DATE:dddd%]
+    CURRENT_DATE:MM [%CURRENT_DATE:MM%]
+    TOMORROW_DATE:MMM [%TOMORROW_DATE:MMM%]
+    CURRENT_DATE:MMMM [%CURRENT_DATE:MMMM%]
+    [%IF:[%CURRENT_DATE%]!='2016-04-23'%]
+    dfgsdfsf
+        [%END:IF%]
+    [%ELSEIF:[%CURRENT_DATE:dd-MM-yyyy%]>'10-10-2018'%]
+    erwerwerwer
+        [%END:IF%]
+    dfgsdfsf
+        [%END:IF%]`;
+
+
+  const literalAttrsObj2 = {
+    '[%CURRENT_TIME:HH%]': 10, '[%CURRENT_DATE:dd%]': 17, '[%CURRENT_DATE%]': '2018-10-20', '[%CURRENT_DATE:dd-MM-yyyy%]': '25-12-2017',
+  };
+
+  addToValidationTests('Literal tst datetime2', inputStr, [], literalAttrsObj2);
+  /*
+  const isCustomer1StrA = `              <!--BEGIN ec_Ad-->              <a href="https://www.TXElectric.com/buy-package?utm_source=optimove&utm_medium=newsletter&utm_campaign=optimove_n_oa_all_dailynewsletter-[%LOWER:LAST_PROMO_SENT%]&utm_term=[%CURRENT_DATE:yyyyMMdd%]" style="text-decoration:none;" target="_blank"><img src="http://news.TXElectric.com/newsletter/ec_ads/ec_a_[%LOWER:LAST_PROMO_SENT%].jpg?v=[%CURRENT_DATE:yyyyMMdd%]" alt="Get Answers Today" border="0" style="font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;overflow:hidden;mso-line-height-rule:exactly;line-height:1px;width:100%;height:auto;display:block;" class="fr-draggable"></a>              <!--END ec_Ad-->`;
+  const isCustomerNot1StrA = `              <!--BEGIN subAd-->              <a href="https://www.TXElectric.com/psychic-readings?utm_source=optimove&utm_medium=newsletter&utm_campaign=optimove_n_oa_all_dailynewsletter-nonc-[%NEWS_NON_CUSTOMER_DAY%]&utm_term=[%CURRENT_DATE:yyyyMMdd%]" style="text-decoration:none;" target="_blank"><img src="http://news.TXElectric.com/newsletter/sub_ads/[%NEWS_NON_CUSTOMER_DAY%]_a_300nl.jpg?v=[%CURRENT_DATE:yyyyMMdd%]" alt="Get Answers Today" border="0" style="font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;overflow:hidden;mso-line-height-rule:exactly;line-height:1px;width:100%;height:auto;display:block;" class="fr-draggable"></a>              <!--END subAd-->`;
+  const middleStr = ` </td>             <td align="center" style="padding:0 0 0 0;margin:0 0 0 0;max-width:300px;" valign="top" width="300"> `;
+  const isCustomer1StrB = `              <!--BEGIN ec_Ad-->              <a href="https://www.TXElectric.com/buy-package?utm_source=optimove&utm_medium=newsletter&utm_campaign=optimove_n_oa_all_dailynewsletter-[%LOWER:LAST_PROMO_SENT%]&utm_term=[%CURRENT_DATE:yyyyMMdd%]" style="text-decoration:none;" target="_blank"><img src="http://news.TXElectric.com/newsletter/ec_ads/ec_b_[%LOWER:LAST_PROMO_SENT%].jpg?v=[%CURRENT_DATE:yyyyMMdd%]" alt="Start Now" border="0" style="font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;overflow:hidden;mso-line-height-rule:exactly;line-height:1px;width:100%;height:auto;display:block;" class="fr-draggable"></a>              <!--END ec_Ad-->`;
+ const isCustomerNot1StrB = `              <!--BEGIN subAd-->              <a href="https://www.TXElectric.com/psychic-readings?utm_source=optimove&utm_medium=newsletter&utm_campaign=optimove_n_oa_all_dailynewsletter-nonc-[%NEWS_NON_CUSTOMER_DAY%]&utm_term=[%CURRENT_DATE:yyyyMMdd%]" style="text-decoration:none;" target="_blank"><img src="http://news.TXElectric.com/newsletter/sub_ads/[%NEWS_NON_CUSTOMER_DAY%]_b_300nl.jpg?v=[%CURRENT_DATE:yyyyMMdd%]" alt="Start Now" border="0" style="font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;overflow:hidden;mso-line-height-rule:exactly;line-height:1px;width:100%;height:auto;display:block;" class="fr-draggable"></a>              <!--END subAd-->`;
+  inputStr = `[%IF:IS_CUSTOMER==1%]${isCustomer1StrA}[%END:IF%] [%ELSE%]${isCustomerNot1StrA}[%END:IF%]${middleStr}[%IF:IS_CUSTOMER==1%]${isCustomer1StrB}[%END:IF%] [%ELSE%]${isCustomerNot1StrB}[%END:IF%]`;
+  const isCustomerVals = [0, 1];
+  isCustomerVals.forEach(
+      value =>
+      {
+
+      }
+  );
+*/
   // todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
 
   /*
