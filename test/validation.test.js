@@ -137,6 +137,20 @@ describe('General Validation Tests', () => {
   addToValidationTests(`Should return: ${res.errorMsg}`, inputStr, [res], generateEmptyLegalAttrs(), 999, maxAllowedCondBlocksNum);
 
 
+  // More clauses than allowed
+  inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${ORDER_KEY}${consts.LEGAL_OPERATORS[0]}100${consts.CUSTOM_CLOSE_DELIMITER}Lorem${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+    ${consts.CUSTOM_OPENING_ELSEIF_BLOCK_PREFIX}${ORDER_KEY}${consts.LEGAL_OPERATORS[0]}200${consts.CUSTOM_CLOSE_DELIMITER}Ipsum${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+    ${consts.CUSTOM_ELSE_BLOCK_TAG}Dolor${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+
+  const maxAllowedClausesPerBlock = 2;
+  const validationMsgTooManyClauses = `${consts.VALIDATION_BLOCK_MSG}: Too many clauses in block (block may include up to ${maxAllowedClausesPerBlock} clauses)`;
+  res = new ValidationResult(
+    consts.VALIDATION_START_INDEX, maxAllowedClausesPerBlock, consts.CUSTOM_ELSE_BLOCK_TAG,
+    validationMsgTooManyClauses,
+  );
+  addToValidationTests(`Should return: ${res.errorMsg}`, inputStr, [res], generateEmptyLegalAttrs(), maxAllowedClausesPerBlock, 999);
+
+
   // Compound valid tag prefixes
   tagPrefixes.PersonalizationTypesPrefixes.forEach((prefix) => {
     const curKeys = [`${prefix}${consts.LOGICAL_CONDITION_DELIMITER}A`,
@@ -311,7 +325,7 @@ describe('General Validation Tests', () => {
     });
   });
 
-    inputStr = `Txt#1 [%IF: TRANS:AGE > 10%] Over 10 yo [%END:IF%]
+  inputStr = `Txt#1 [%IF: TRANS:AGE > 10%] Over 10 yo [%END:IF%]
 
     [%ELSEIF:UPPER:TRANS:LAST_NAME !='asdasdas'%] This txt should appear [%END:IF%]
 
@@ -326,9 +340,11 @@ describe('General Validation Tests', () => {
         [%ELSEIF:TRANS:LAST_NAME%] TRANS:LAST_NAME supplied [%END:IF%] [%ELSE%] Txt #3 [%END:IF%]
     sdfsdfTxt #4`;
 
-    const literalAttrsObj = {"[%TRANS:AGE%]":"57", "UPPER:TRANS:LAST_NAME":"","CURRENT_TIME:TIME_FORMAT":"07:06 am"," TOMORROW_DATE:dd/MM/yyyy":"28/06/2018"," CURRENT_DATE:yyyy-MM":"2018-06","TRANS:LAST_NAME":""};
+  const literalAttrsObj = {
+    '[%TRANS:AGE%]': '57', 'UPPER:TRANS:LAST_NAME': '', 'CURRENT_TIME:TIME_FORMAT': '07:06 am', ' TOMORROW_DATE:dd/MM/yyyy': '28/06/2018', ' CURRENT_DATE:yyyy-MM': '2018-06', 'TRANS:LAST_NAME': '',
+  };
 
-    addToValidationTests('Literal tst datetime', inputStr, [], literalAttrsObj);
+  addToValidationTests('Literal tst datetime', inputStr, [], literalAttrsObj);
 
   // todo - add tests with dateime alias (DATE_FORAMT, TIME_FORMAT) - take them from key dateimeHelper.DATETIME_DEF_FORMAT_ALIAS_KEY in datetimeHelper.DateTimeObjList
 
