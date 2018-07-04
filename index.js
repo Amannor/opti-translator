@@ -54,14 +54,6 @@ const consts = require('./lib/consts.js');
     return preprocessedInput;
   }
 
-  function preprocessAttrs(inputAttrs) {
-    const preprocessedAttrs = {};
-    if (inputAttrs != null) {
-      Object.keys(inputAttrs).forEach(key => (inputAttrs[key] == null || inputAttrs[key].trim() == '') && delete inputAttrs[key]);
-    }
-    return preprocessedAttrs;
-  }
-
   translator.translate = function (dataToTranslate, attrsObj = null, shouldValidate = false, maxClausesPerBlock = null, maxCondBlocks = null, shouldReturnGroupByMapping = false) {
     const cleanedInputData = preprocessInputStr(dataToTranslate);
     const attrsLocalCopy = attrsObj === null ? attrsObj : Object.assign({}, attrsObj);
