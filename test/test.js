@@ -362,6 +362,30 @@ describe('General Translator Tests', () => {
     });
   });
 
+  // Datetime with string literal
+  const fullMonthsVals = [...moment.months(), 'Bla'];
+
+  datetimeHelper.DateTags.forEach((dateTag) => {
+    const dateTagWithFormat = `${dateTag}${consts.LOGICAL_CONDITION_DELIMITER}${datetimeHelper.dateFormats.M4}`;
+    [dateTagWithFormat, `${consts.CUSTOM_OPEN_DELIMITER}${dateTagWithFormat}${consts.CUSTOM_CLOSE_DELIMITER}`].forEach((curFullMonthKey) => {
+      fullMonthsVals.forEach((fullMonthVal) => {
+        moment.months().forEach((valueInClause) => {
+          inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curFullMonthKey}${consts.OP_EQ}
+          ${consts.STRING_AND_DATE_LITERAL_ENCLOSING}${valueInClause}${consts.STRING_AND_DATE_LITERAL_ENCLOSING}
+          ${consts.CUSTOM_CLOSE_DELIMITER}A${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+          ${consts.CUSTOM_ELSE_BLOCK_TAG}B${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+
+          const inputObjFullMonthTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [dateTagWithFormat]: fullMonthVal } };
+          const expectedResult = valueInClause === fullMonthVal ? 'A' : 'B';
+          addToTestCases(inputObjFullMonthTst, expectedResult, `Full month tst curFullMonthKey: ${curFullMonthKey} valueInClause: ${valueInClause} fullMonthVal: ${fullMonthVal}`);
+        });
+      });
+    });
+  });
+
+
+  //  const shortMonthsVals = [...moment.monthsShort(), "Bla", ""];
+
   /* - TODO make time test work
     const curTimeKey = datetimeHelper.TimeTags[0];
     inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curTimeKey}${consts.OP_GT}'08:19 AM'${consts.CUSTOM_CLOSE_DELIMITER}
