@@ -436,7 +436,9 @@ describe('General Translator Tests', () => {
           datetimeHelper.DATETIME_DELIMITERS.forEach((yearToMonthDelim) => {
             datetimeHelper.DATETIME_DELIMITERS.forEach((monthToDayDelim) => {
               const explicitFormat = `${yearFormat}${yearToMonthDelim}${monthFormat}${monthToDayDelim}${dayFormat}`;
-              const explicitMomentFormat = explicitFormat.toUpperCase();
+              let explicitMomentFormat = explicitFormat.replace(yearFormat, yearFormat.toUpperCase());
+              if (dayFormat === datetimeHelper.dateFormats.d2) { explicitMomentFormat = explicitMomentFormat.replace(dayFormat, dayFormat.toUpperCase()); }
+              // TODO if variable or attrs[CURRENT_TIME:...] contains any other alpah char besides 'am'/'pm' (case insensitive) - have a regular string comparison and not datetime
               const dateValue = curMomemnt.format(explicitMomentFormat);
               const dateTagWithFormat = `${dateTag}${consts.LOGICAL_CONDITION_DELIMITER}${explicitFormat}`;
 
@@ -446,7 +448,7 @@ describe('General Translator Tests', () => {
                             ${consts.CUSTOM_CLOSE_DELIMITER}A${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
                             ${consts.CUSTOM_ELSE_BLOCK_TAG}B${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
 
-                const inputObjCompoundDateTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [curCompoundDateKey]: dateValue } };
+                const inputObjCompoundDateTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [dateTagWithFormat]: dateValue } };
                 const expectedResult = op === consts.OP_EQ ? 'A' : 'B';
                 addToTestCases(inputObjCompoundDateTst, expectedResult, `Compound date tst year_month_day curCompoundDateKey: ${curCompoundDateKey} op ${op} dateValue: ${dateValue}`);
               });
