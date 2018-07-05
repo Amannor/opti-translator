@@ -404,6 +404,28 @@ describe('General Translator Tests', () => {
     });
   });
 
+  // Datetime with string literal - full day names
+  const fullDaysVals = [...moment.weekdays(), 'Bla'];
+
+  datetimeHelper.DateTags.forEach((dateTag) => {
+    const dateTagWithFormat = `${dateTag}${consts.LOGICAL_CONDITION_DELIMITER}${datetimeHelper.dateFormats.d4}`;
+    [dateTagWithFormat, `${consts.CUSTOM_OPEN_DELIMITER}${dateTagWithFormat}${consts.CUSTOM_CLOSE_DELIMITER}`].forEach((curFullDayKey) => {
+      fullDaysVals.forEach((fullDayVal) => {
+        moment.weekdays().forEach((valueInClause) => {
+          inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curFullDayKey}${consts.OP_EQ}
+          ${consts.STRING_AND_DATE_LITERAL_ENCLOSING}${valueInClause}${consts.STRING_AND_DATE_LITERAL_ENCLOSING}
+          ${consts.CUSTOM_CLOSE_DELIMITER}A${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+          ${consts.CUSTOM_ELSE_BLOCK_TAG}B${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+
+          const inputObjFullDayTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [dateTagWithFormat]: fullDayVal } };
+          const expectedResult = valueInClause === fullDayVal ? 'A' : 'B';
+          addToTestCases(inputObjFullDayTst, expectedResult, `Full day tst curFullDayKey: ${curFullDayKey} valueInClause: ${valueInClause} fullDayVal: ${fullDayVal}`);
+        });
+      });
+    });
+  });
+
+
   /* - TODO make time test work
     const curTimeKey = datetimeHelper.TimeTags[0];
     inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curTimeKey}${consts.OP_GT}'08:19 AM'${consts.CUSTOM_CLOSE_DELIMITER}
