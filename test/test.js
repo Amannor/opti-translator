@@ -502,10 +502,12 @@ describe('General Translator Tests', () => {
   const dateLiteralExpectedRes = ` Exact Tomorrow Date [%${dateLiteralTstKey}%] `;
   inputStr = `[%IF:[%${dateLiteralTstKey}%] == 'July-Sunday-2018'%]${dateLiteralExpectedRes}[%END:IF%]`;
   const inputObjLiteralDateTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [dateLiteralTstKey]: 'July-Sunday-2018' } };
-
   addToTestCases(inputObjLiteralDateTst, dateLiteralExpectedRes, 'Date Literal tst');
 
 
+  inputStr = `[%IF:[%${dateLiteralTstKey}%] == 'July-Thursday-2018'%]${dateLiteralExpectedRes}[%END:IF%]`;
+  const inputObjLiteralDateTst2 = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [dateLiteralTstKey]: 'July-Sunday-2018' } };
+  addToTestCases(inputObjLiteralDateTst2, '', 'Date Literal tst2');
   /* - TODO make time test work
     const curTimeKey = datetimeHelper.TimeTags[0];
     inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curTimeKey}${consts.OP_GT}'08:19 AM'${consts.CUSTOM_CLOSE_DELIMITER}
