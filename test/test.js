@@ -459,7 +459,7 @@ describe('General Translator Tests', () => {
   });
 
 
-  // Datetime with compound string literal - month_day_year
+  // Datetime with compound string literal (identical value in clause & attrs) - month_day_year
   consts.EGALITARIAN_OPERATORS.forEach((op) => {
     datetimeHelper.DateTags.forEach((dateTag) => {
       [datetimeHelper.dateFormats.M2, datetimeHelper.dateFormats.M3, datetimeHelper.dateFormats.M4].forEach((monthFormat) => {
@@ -467,7 +467,6 @@ describe('General Translator Tests', () => {
           datetimeHelper.DATETIME_DELIMITERS.forEach((monthToDayDelim) => {
             datetimeHelper.DATETIME_DELIMITERS.forEach((dayToYearDelim) => {
               const explicitFormat = `${monthFormat}${monthToDayDelim}${dayFormat}${dayToYearDelim}${yearFormat}`;
-              //  const explicitFormat = `${yearFormat}${yearToMonthDelim}${monthFormat}${monthToDayDelim}${dayFormat}`;
               let explicitMomentFormat = explicitFormat.replace(yearFormat, yearFormat.toUpperCase());
               if (dayFormat === datetimeHelper.dateFormats.d2) { explicitMomentFormat = explicitMomentFormat.replace(dayFormat, dayFormat.toUpperCase()); }
               const dateValue = curMomemnt.format(explicitMomentFormat);
@@ -481,7 +480,7 @@ describe('General Translator Tests', () => {
 
                 const inputObjCompoundDateTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [dateTagWithFormat]: dateValue } };
                 const expectedResult = op === consts.OP_EQ ? 'A' : 'B';
-                addToTestCases(inputObjCompoundDateTst, expectedResult, `Compound date tst month_day_year curCompoundDateKey: ${curCompoundDateKey} op ${op} dateValue: ${dateValue}`);
+                addToTestCases(inputObjCompoundDateTst, expectedResult, `Compound date tst (identical value in clause & attrs) month_day_year curCompoundDateKey: ${curCompoundDateKey} op ${op} dateValue: ${dateValue}`);
               });
             });
           });
@@ -489,7 +488,37 @@ describe('General Translator Tests', () => {
       });
     });
   });
+  // Datetime with compound string literal (non-identical value in clause & attrs) - month_day_year
+  consts.EGALITARIAN_OPERATORS.forEach((op) => {
+    datetimeHelper.DateTags.forEach((dateTag) => {
+      [datetimeHelper.dateFormats.M2, datetimeHelper.dateFormats.M3, datetimeHelper.dateFormats.M4].forEach((monthFormat) => {
+        [datetimeHelper.dateFormats.d2, datetimeHelper.dateFormats.d4].forEach((dayFormat) => {
+          datetimeHelper.DATETIME_DELIMITERS.forEach((monthToDayDelim) => {
+            datetimeHelper.DATETIME_DELIMITERS.forEach((dayToYearDelim) => {
+              const explicitFormat = `${monthFormat}${monthToDayDelim}${dayFormat}${dayToYearDelim}${yearFormat}`;
+              let explicitMomentFormat = explicitFormat.replace(yearFormat, yearFormat.toUpperCase());
+              if (dayFormat === datetimeHelper.dateFormats.d2) { explicitMomentFormat = explicitMomentFormat.replace(dayFormat, dayFormat.toUpperCase()); }
+              const dateValueInClause = curMomemnt.format(explicitMomentFormat);
+              const dateTagWithFormat = `${dateTag}${consts.LOGICAL_CONDITION_DELIMITER}${explicitFormat}`;
 
+              [dateTagWithFormat, `${consts.CUSTOM_OPEN_DELIMITER}${dateTagWithFormat}${consts.CUSTOM_CLOSE_DELIMITER}`].forEach((curCompoundDateKey) => {
+                inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curCompoundDateKey}${op}
+                            ${consts.STRING_AND_DATE_LITERAL_ENCLOSING}${dateValueInClause}${consts.STRING_AND_DATE_LITERAL_ENCLOSING}
+                            ${consts.CUSTOM_CLOSE_DELIMITER}A${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+                            ${consts.CUSTOM_ELSE_BLOCK_TAG}B${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+                ['years', 'months', 'days'].forEach((timeDiff) => {
+                  const dateValueInAttrs = moment().add(1, timeDiff).format(explicitMomentFormat);
+                  const inputObjCompoundDateTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [dateTagWithFormat]: dateValueInAttrs } };
+                  const expectedResult = op === consts.OP_NEQ ? 'A' : 'B';
+                  addToTestCases(inputObjCompoundDateTst, expectedResult, `Compound date tst month_day_year (non-identical value in clause & attrs) curCompoundDateKey: ${curCompoundDateKey} op ${op} dateValueInClause: ${dateValueInClause} dateValueInAttrs ${dateValueInAttrs}`);
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
 
   /* - TODO make time test work
     const curTimeKey = datetimeHelper.TimeTags[0];

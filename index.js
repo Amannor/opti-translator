@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const ejsTranslator = require('./lib/ejsTranslator');
 const consts = require('./lib/consts.js');
 
