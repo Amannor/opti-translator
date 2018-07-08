@@ -438,7 +438,6 @@ describe('General Translator Tests', () => {
               const explicitFormat = `${yearFormat}${yearToMonthDelim}${monthFormat}${monthToDayDelim}${dayFormat}`;
               let explicitMomentFormat = explicitFormat.replace(yearFormat, yearFormat.toUpperCase());
               if (dayFormat === datetimeHelper.dateFormats.d2) { explicitMomentFormat = explicitMomentFormat.replace(dayFormat, dayFormat.toUpperCase()); }
-              // TODO if variable or attrs[CURRENT_TIME:...] contains any other alpah char besides 'am'/'pm' (case insensitive) - have a regular string comparison and not datetime
               const dateValue = curMomemnt.format(explicitMomentFormat);
               const dateTagWithFormat = `${dateTag}${consts.LOGICAL_CONDITION_DELIMITER}${explicitFormat}`;
 
@@ -451,6 +450,38 @@ describe('General Translator Tests', () => {
                 const inputObjCompoundDateTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [dateTagWithFormat]: dateValue } };
                 const expectedResult = op === consts.OP_EQ ? 'A' : 'B';
                 addToTestCases(inputObjCompoundDateTst, expectedResult, `Compound date tst year_month_day curCompoundDateKey: ${curCompoundDateKey} op ${op} dateValue: ${dateValue}`);
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+
+
+  // Datetime with compound string literal - month_day_year
+  consts.EGALITARIAN_OPERATORS.forEach((op) => {
+    datetimeHelper.DateTags.forEach((dateTag) => {
+      [datetimeHelper.dateFormats.M2, datetimeHelper.dateFormats.M3, datetimeHelper.dateFormats.M4].forEach((monthFormat) => {
+        [datetimeHelper.dateFormats.d2, datetimeHelper.dateFormats.d4].forEach((dayFormat) => {
+          datetimeHelper.DATETIME_DELIMITERS.forEach((monthToDayDelim) => {
+            datetimeHelper.DATETIME_DELIMITERS.forEach((dayToYearDelim) => {
+              const explicitFormat = `${monthFormat}${monthToDayDelim}${dayFormat}${dayToYearDelim}${yearFormat}`;
+              //  const explicitFormat = `${yearFormat}${yearToMonthDelim}${monthFormat}${monthToDayDelim}${dayFormat}`;
+              let explicitMomentFormat = explicitFormat.replace(yearFormat, yearFormat.toUpperCase());
+              if (dayFormat === datetimeHelper.dateFormats.d2) { explicitMomentFormat = explicitMomentFormat.replace(dayFormat, dayFormat.toUpperCase()); }
+              const dateValue = curMomemnt.format(explicitMomentFormat);
+              const dateTagWithFormat = `${dateTag}${consts.LOGICAL_CONDITION_DELIMITER}${explicitFormat}`;
+
+              [dateTagWithFormat, `${consts.CUSTOM_OPEN_DELIMITER}${dateTagWithFormat}${consts.CUSTOM_CLOSE_DELIMITER}`].forEach((curCompoundDateKey) => {
+                inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curCompoundDateKey}${op}
+                            ${consts.STRING_AND_DATE_LITERAL_ENCLOSING}${dateValue}${consts.STRING_AND_DATE_LITERAL_ENCLOSING}
+                            ${consts.CUSTOM_CLOSE_DELIMITER}A${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
+                            ${consts.CUSTOM_ELSE_BLOCK_TAG}B${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+
+                const inputObjCompoundDateTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [dateTagWithFormat]: dateValue } };
+                const expectedResult = op === consts.OP_EQ ? 'A' : 'B';
+                addToTestCases(inputObjCompoundDateTst, expectedResult, `Compound date tst month_day_year curCompoundDateKey: ${curCompoundDateKey} op ${op} dateValue: ${dateValue}`);
               });
             });
           });
