@@ -458,36 +458,6 @@ describe('General Translator Tests', () => {
     });
   });
 
-
-  // Datetime with compound string literal (identical value in clause & attrs) - month_day_year
-  consts.EGALITARIAN_OPERATORS.forEach((op) => {
-    datetimeHelper.DateTags.forEach((dateTag) => {
-      [datetimeHelper.dateFormats.M2, datetimeHelper.dateFormats.M3, datetimeHelper.dateFormats.M4].forEach((monthFormat) => {
-        [datetimeHelper.dateFormats.d2, datetimeHelper.dateFormats.d4].forEach((dayFormat) => {
-          datetimeHelper.DATETIME_DELIMITERS.forEach((monthToDayDelim) => {
-            datetimeHelper.DATETIME_DELIMITERS.forEach((dayToYearDelim) => {
-              const explicitFormat = `${monthFormat}${monthToDayDelim}${dayFormat}${dayToYearDelim}${yearFormat}`;
-              let explicitMomentFormat = explicitFormat.replace(yearFormat, yearFormat.toUpperCase());
-              if (dayFormat === datetimeHelper.dateFormats.d2) { explicitMomentFormat = explicitMomentFormat.replace(dayFormat, dayFormat.toUpperCase()); }
-              const dateValue = curMomemnt.format(explicitMomentFormat);
-              const dateTagWithFormat = `${dateTag}${consts.LOGICAL_CONDITION_DELIMITER}${explicitFormat}`;
-
-              [dateTagWithFormat, `${consts.CUSTOM_OPEN_DELIMITER}${dateTagWithFormat}${consts.CUSTOM_CLOSE_DELIMITER}`].forEach((curCompoundDateKey) => {
-                inputStr = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curCompoundDateKey}${op}
-                            ${consts.STRING_AND_DATE_LITERAL_ENCLOSING}${dateValue}${consts.STRING_AND_DATE_LITERAL_ENCLOSING}
-                            ${consts.CUSTOM_CLOSE_DELIMITER}A${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
-                            ${consts.CUSTOM_ELSE_BLOCK_TAG}B${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
-
-                const inputObjCompoundDateTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [dateTagWithFormat]: dateValue } };
-                const expectedResult = op === consts.OP_EQ ? 'A' : 'B';
-                addToTestCases(inputObjCompoundDateTst, expectedResult, `Compound date tst (identical value in clause & attrs) month_day_year curCompoundDateKey: ${curCompoundDateKey} op ${op} dateValue: ${dateValue}`);
-              });
-            });
-          });
-        });
-      });
-    });
-  });
   // Datetime with compound string literal (non-identical value in clause & attrs) - month_day_year
   consts.EGALITARIAN_OPERATORS.forEach((op) => {
     datetimeHelper.DateTags.forEach((dateTag) => {
@@ -506,11 +476,18 @@ describe('General Translator Tests', () => {
                             ${consts.STRING_AND_DATE_LITERAL_ENCLOSING}${dateValueInClause}${consts.STRING_AND_DATE_LITERAL_ENCLOSING}
                             ${consts.CUSTOM_CLOSE_DELIMITER}A${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}
                             ${consts.CUSTOM_ELSE_BLOCK_TAG}B${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
-                ['years', 'months', 'days'].forEach((timeDiff) => {
-                  const dateValueInAttrs = moment().add(1, timeDiff).format(explicitMomentFormat);
-                  const inputObjCompoundDateTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [dateTagWithFormat]: dateValueInAttrs } };
-                  const expectedResult = op === consts.OP_NEQ ? 'A' : 'B';
-                  addToTestCases(inputObjCompoundDateTst, expectedResult, `Compound date tst month_day_year (non-identical value in clause & attrs) curCompoundDateKey: ${curCompoundDateKey} op ${op} dateValueInClause: ${dateValueInClause} dateValueInAttrs ${dateValueInAttrs}`);
+                ['years', 'months', 'days'].forEach((timeUnit) => {
+                  [-1, 0, 1].forEach((timeDiff) => {
+                    const dateValueInAttrs = moment().add(timeDiff, timeUnit).format(explicitMomentFormat);
+                    const inputObjCompoundDateTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [dateTagWithFormat]: dateValueInAttrs } };
+                    let expectedResult = '';
+                    if (timeDiff === 0) {
+                      expectedResult = op === consts.OP_EQ ? 'A' : 'B';
+                    } else {
+                      expectedResult = op === consts.OP_NEQ ? 'A' : 'B';
+                    }
+                    addToTestCases(inputObjCompoundDateTst, expectedResult, `Compound date tst month_day_year curCompoundDateKey: ${curCompoundDateKey} op ${op} dateValueInClause: ${dateValueInClause} dateValueInAttrs ${dateValueInAttrs}`);
+                  });
                 });
               });
             });
@@ -519,6 +496,15 @@ describe('General Translator Tests', () => {
       });
     });
   });
+
+
+  const dateLiteralTstKey = 'CURRENT_DATE:MMMM-dddd-yyyy';
+  const dateLiteralExpectedRes = ` Exact Tomorrow Date [%${dateLiteralTstKey}%] `;
+  inputStr = `[%IF:[%${dateLiteralTstKey}%] == 'July-Sunday-2018'%]${dateLiteralExpectedRes}[%END:IF%]`;
+  const inputObjLiteralDateTst = { [tstConsts.INPUT_KEY]: inputStr, [consts.ATTRIBUTES_KEY_STR]: { [dateLiteralTstKey]: 'July-Sunday-2018' } };
+
+  addToTestCases(inputObjLiteralDateTst, dateLiteralExpectedRes, 'Date Literal tst');
+
 
   /* - TODO make time test work
     const curTimeKey = datetimeHelper.TimeTags[0];
