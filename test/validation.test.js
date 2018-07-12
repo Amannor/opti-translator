@@ -375,6 +375,26 @@ describe('General Validation Tests', () => {
   };
 
   addToValidationTests('Literal tst datetime2', inputStr, [], literalAttrsObj2);
+
+  const curKey = 'ILLEGAL_VAL_KEY';
+  const illegalValObj = { [curKey]: '' };
+  const generalEmptyValidationRes = new ValidationResult();
+  consts.LEGAL_OPERATORS.forEach((op) => {
+    let clausePrefix = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curKey}${op}A`;
+    inputStr = `${clausePrefix}${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+    const res1 = new ValidationResult(consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX, clausePrefix.replace(consts.CUSTOM_OPEN_DELIMITER, ''), consts.VALIDATION_ILLEGAL_VALUE_MSG, 'A');
+    addToValidationTests(`Illegal value tst clausePrefix ${clausePrefix}`, inputStr, [res1, generalEmptyValidationRes], illegalValObj, 99, 99, areValidationResultsEqual_generalErrorsAdapter);
+
+    clausePrefix = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curKey}${op}'A`;
+    inputStr = `${clausePrefix}${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+    const res2 = new ValidationResult(consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX, clausePrefix.replace(consts.CUSTOM_OPEN_DELIMITER, ''), consts.VALIDATION_ILLEGAL_VALUE_MSG, '\'A');
+    addToValidationTests(`Illegal value tst clausePrefix ${clausePrefix}`, inputStr, [res2, generalEmptyValidationRes], illegalValObj, 99, 99, areValidationResultsEqual_generalErrorsAdapter);
+
+    clausePrefix = `${consts.CUSTOM_OPENING_IF_BLOCK_PREFIX}${curKey}${op}A'`;
+    inputStr = `${clausePrefix}${consts.CUSTOM_CLOSE_DELIMITER} Lorem ipsum ${consts.CUSTOM_CLOSING_IF_BLOCK_TAG}`;
+    const res3 = new ValidationResult(consts.VALIDATION_START_INDEX, consts.VALIDATION_START_INDEX, clausePrefix.replace(consts.CUSTOM_OPEN_DELIMITER, ''), consts.VALIDATION_ILLEGAL_VALUE_MSG, 'A\'');
+    addToValidationTests(`Illegal value tst clausePrefix ${clausePrefix}`, inputStr, [res3, generalEmptyValidationRes], illegalValObj, 99, 99, areValidationResultsEqual_generalErrorsAdapter);
+  });
   /*
   const isCustomer1StrA = `              <!--BEGIN ec_Ad-->              <a href="https://www.TXElectric.com/buy-package?utm_source=optimove&utm_medium=newsletter&utm_campaign=optimove_n_oa_all_dailynewsletter-[%LOWER:LAST_PROMO_SENT%]&utm_term=[%CURRENT_DATE:yyyyMMdd%]" style="text-decoration:none;" target="_blank"><img src="http://news.TXElectric.com/newsletter/ec_ads/ec_a_[%LOWER:LAST_PROMO_SENT%].jpg?v=[%CURRENT_DATE:yyyyMMdd%]" alt="Get Answers Today" border="0" style="font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;overflow:hidden;mso-line-height-rule:exactly;line-height:1px;width:100%;height:auto;display:block;" class="fr-draggable"></a>              <!--END ec_Ad-->`;
   const isCustomerNot1StrA = `              <!--BEGIN subAd-->              <a href="https://www.TXElectric.com/psychic-readings?utm_source=optimove&utm_medium=newsletter&utm_campaign=optimove_n_oa_all_dailynewsletter-nonc-[%NEWS_NON_CUSTOMER_DAY%]&utm_term=[%CURRENT_DATE:yyyyMMdd%]" style="text-decoration:none;" target="_blank"><img src="http://news.TXElectric.com/newsletter/sub_ads/[%NEWS_NON_CUSTOMER_DAY%]_a_300nl.jpg?v=[%CURRENT_DATE:yyyyMMdd%]" alt="Get Answers Today" border="0" style="font-family:Arial, sans-serif;font-size:1px;color:#f6f7fb;overflow:hidden;mso-line-height-rule:exactly;line-height:1px;width:100%;height:auto;display:block;" class="fr-draggable"></a>              <!--END subAd-->`;
